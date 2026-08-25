@@ -187,25 +187,6 @@ function Overview() {
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]">
         <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Where things stand</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 text-[0.95rem] leading-relaxed">
-              <p>
-                This is the client portal application served for your matter, streamed from
-                Navigator&apos;s per-deployment applications bucket. It arrives from
-                Navigator&apos;s own origin, behind your session and the participation list for{' '}
-                {MATTER.caption}, so only the people on the matter can reach it.
-              </p>
-              <p>
-                Nothing on this page is a live record. {MATTER.caption} is a fixture matter, and
-                this bundle is the worked example a contributor reads before attaching a real
-                application to a real one.
-              </p>
-            </CardContent>
-          </Card>
-
           <Card className="border-l-4 border-l-primary">
             <CardHeader>
               <div>
@@ -217,9 +198,16 @@ function Overview() {
             </CardHeader>
             <CardContent className="space-y-4 text-[0.95rem] leading-relaxed">
               <p>
-                A second count is now before the court: whether Dermot Cruller may rescind an alleged
-                contract conveying his soul, given in exchange for a doughnut he ate in two sittings
-                a year apart.
+                <strong className="text-foreground">The theme, in one line:</strong> Prine says a
+                doughnut bought him Dermot&apos;s soul. We think a bargain that lopsided is not a
+                bargain at all — it is an excess-damages claim wearing a contract&apos;s clothes,
+                and the disparity between what Dermot got and what Prine says he gave up is itself
+                evidence of the overreaching this count is built on.
+              </p>
+              <p>
+                Whether Dermot may rescind that alleged contract — given in exchange for a doughnut
+                he ate in two sittings a year apart — is the question the rest of this count
+                answers.
               </p>
               <Button asChild>
                 <a href={portalPath('#introduction')}>
@@ -357,6 +345,25 @@ function Overview() {
                   </li>
                 ))}
               </ol>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Where things stand</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 text-[0.95rem] leading-relaxed">
+              <p>
+                This is the client portal application served for your matter, streamed from
+                Navigator&apos;s per-deployment applications bucket. It arrives from
+                Navigator&apos;s own origin, behind your session and the participation list for{' '}
+                {MATTER.caption}, so only the people on the matter can reach it.
+              </p>
+              <p>
+                Nothing on this page is a live record. {MATTER.caption} is a fixture matter, and
+                this bundle is the worked example a contributor reads before attaching a real
+                application to a real one.
+              </p>
             </CardContent>
           </Card>
         </div>
