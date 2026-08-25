@@ -1,7 +1,8 @@
 // Copyright (C) 2026 Neon Law Foundation.
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CalendarClock, FileText, Gavel, Quote, ScrollText, ShieldQuestion } from 'lucide-react'
+import { CalendarClock, Code2, FileText, Gavel, Quote, RotateCcw, ScrollText, ShieldQuestion } from 'lucide-react'
+import { lazy, Suspense, useState } from 'react'
 
 import { PdfViewer } from './PdfViewer'
 import { MATTER } from './matter'
@@ -22,8 +23,24 @@ import {
   UNDISPUTED_FACTS,
   type AccrualCandidate,
 } from './motion'
+import { MOTION_NOTATION_BODY, MOTION_NOTATION_FRONTMATTER } from './motionNotation'
 import { portalPath } from './mount'
 import { READY_KICKER } from './ready'
+
+/**
+ * CodeMirror and its language packages, loaded on first use.
+ *
+ * Same reason `src/pdf.ts` dynamically imports pdf.js: a reader who never opens
+ * the motion tab should not download an editor for a card they never scroll
+ * to, and `NotationEditor.tsx` is the only file that imports CodeMirror at
+ * all. `React.lazy` is the code-splitting seam here rather than a hand-rolled
+ * promise cache, because the thing being loaded is a component rather than an
+ * imperative API `PdfViewer` drives — see `bundle.test.ts` for the equivalent
+ * assertion on the pdf.js chunk.
+ */
+const NotationEditor = lazy(() =>
+  import('./NotationEditor').then((module) => ({ default: module.NotationEditor })),
+)
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -70,6 +87,14 @@ const WHOSE_LABEL: Record<AccrualCandidate['whose'], string> = {
 }
 
 export function MotionPage() {
+  const [frontmatter, setFrontmatter] = useState(MOTION_NOTATION_FRONTMATTER)
+  const [body, setBody] = useState(MOTION_NOTATION_BODY)
+
+  function resetNotation() {
+    setFrontmatter(MOTION_NOTATION_FRONTMATTER)
+    setBody(MOTION_NOTATION_BODY)
+  }
+
   return (
     <div className="space-y-8">
       <header className="space-y-4">
@@ -382,6 +407,66 @@ export function MotionPage() {
           </Alert>
         </div>
       </div>
+
+      <Card>
+        <CardHeader>
+          <div>
+            <CardTitle>What this would look like as a notation template</CardTitle>
+            <CardDescription>
+              The engagement letter, the notice, and the affidavit are Markdown like this. The
+              card above explains why the motion is not — pleading paper has no render profile
+              here. This is a sketch of the same argument in that format, for comparison.
+            </CardDescription>
+          </div>
+          <Code2 className="size-5 text-muted-foreground" />
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Suspense
+            fallback={
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+                <div className="h-72 animate-pulse rounded-lg border bg-muted" />
+                <div className="h-72 animate-pulse rounded-lg border bg-muted" />
+              </div>
+            }
+          >
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+              <NotationEditor
+                label="Frontmatter — YAML"
+                language="yaml"
+                value={frontmatter}
+                onChange={setFrontmatter}
+              />
+              <NotationEditor
+                label="Body — Markdown"
+                language="markdown"
+                value={body}
+                onChange={setBody}
+              />
+            </div>
+          </Suspense>
+
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="max-w-2xl text-xs leading-relaxed text-muted-foreground">
+              Editable with{' '}
+              <a
+                href="https://codemirror.net/"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="underline decoration-dotted underline-offset-2 hover:text-foreground"
+              >
+                CodeMirror
+              </a>
+              , MIT-licensed and bundled from npm rather than a CDN, so it works under the
+              portal&apos;s <code className="font-mono">script-src &apos;self&apos;</code> CSP.
+              Nothing typed here is saved or rendered — it lives only in this tab, and it is not
+              one of the templates in <code className="font-mono">templates/neon_law/</code>.
+            </p>
+            <Button variant="outline" size="sm" onClick={resetNotation}>
+              <RotateCcw /> Reset
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
