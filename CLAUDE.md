@@ -31,6 +31,13 @@ becomes somebody's confusing diff.
 test, not as an example in a comment. This is a worked example a contributor reads and clones, so anything committed
 here is something somebody will copy.
 
+The one exception is a real, public-domain legal authority — a published court opinion or an enacted statute, of the
+kind `src/research.ts` already cites and marks `verified: true`. Its full text may be committed here, verbatim and
+clearly marked as real rather than fixture, because it discloses nothing about any matter and a government work carries
+no copyright to violate. That exception covers only the authority's own text — any matter-specific analysis of it stays
+fixture — and it does not touch the separate rule that a client portal build may not link off-origin (see
+`.github/no-external-references.py`); a committed opinion is served same-origin like everything else in the bundle.
+
 ## Before calling work done
 
 `pnpm check` — lint, typecheck, build, and tests, in that order. The build is part of it because several tests assert
