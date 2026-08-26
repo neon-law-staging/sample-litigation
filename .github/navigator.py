@@ -170,9 +170,16 @@ def _parse(text: str) -> dict[str, object]:
                 raise ConfigError(f"{CONFIG.name}:{number}: `{block}` is a list; write `- {stripped}`")
             data[block].append(_scalar(stripped[2:].strip()))  # type: ignore[union-attr]
         elif shape == "map":
-            if ":" not in stripped:
+            # Split on the first `: `, not the first `:`, which is YAML's own rule
+            # and the only reading under which a URL can be a key. `partition(":")`
+            # turned `https://foo.bar: reason` into the key `https` — and because
+            # the only consumer tests `full.startswith(prefix)`, a bare scheme
+            # matched every http and https reference in the bundle. The gate went
+            # quiet rather than red, which is the worst way for a gate to fail.
+            # ENG: burshteyn shipped in that state; see the note in the commit.
+            key, separator, value = stripped.partition(": ")
+            if not separator:
                 raise ConfigError(f"{CONFIG.name}:{number}: `{block}` is a map; write `key: reason`")
-            key, _, value = stripped.partition(":")
             data[block][_scalar(key.strip())] = _scalar(value.strip())  # type: ignore[index]
         else:
             raise ConfigError(f"{CONFIG.name}:{number}: `{block}` is a scalar and takes no block")
