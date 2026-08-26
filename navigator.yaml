@@ -35,6 +35,22 @@ allowed_prefixes:
   # be a vulnerability rather than a feature.
   http://www.xfa.org/schema/: XFA package namespace identifiers — compared, never fetched
   http://ns.adobe.com/: Adobe XDP, XFDF, and XMP namespace identifiers — compared, never fetched
+  # The AGPL source pointer, inside the preserved `/*!` banner on every emitted
+  # chunk and stylesheet. The licence requires the notice be kept and the engine
+  # never evaluates a comment. Stripping it to satisfy the gate would be removing
+  # a licence notice, which is the one edit here that would actually be wrong.
+  https://github.com/neon-law-foundation/: AGPL source pointer in a comment banner
+  # Authority links a reader clicks, not requests the portal makes. The matter
+  # cites NRCP 33 and four Nevada cases, and citing law without linking to it is
+  # not an option this practice takes. They are `href` targets in fixture data
+  # for `Cruller v. Prine`, so no real client's work product is behind them.
+  # Whether a *real* client portal may carry an off-origin authority link — a
+  # click sends the portal URL as a `Referer` — is a policy question this
+  # repository cannot settle; see the Linear issue.
+  https://www.leg.state.nv.us/CourtRules/: NRCP citation targets — `href`, clicked, never fetched
+  https://app.midpage.ai/: case and statute citation targets — `href`, clicked, never fetched
+  # Attribution for the editor component, rendered as a link in the UI.
+  https://codemirror.net/: CodeMirror attribution link in the notation editor
 
 # Hosts the built bundle may name.
 allowed_hosts:
