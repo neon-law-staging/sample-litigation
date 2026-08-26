@@ -1,0 +1,49 @@
+# navigator.yaml — the one file in which this repository names itself.
+#
+# `host` is the Navigator deployment that serves this Project. It is the whole
+# of the publish destination: `.github/navigator.py` maps it to that
+# deployment's private applications bucket, so nothing else in this repository
+# names a bucket and no repository variable can point a portal somewhere else.
+#
+# `project` is the Project code. It is the mount Navigator serves the portal at,
+# `/app/projects/<project>/portal/`, and the prefix the bundle is uploaded
+# under, `<project>/portal/`. `vite.config.ts` builds against it and the gate
+# checks the built `index.html` against it.
+
+host: staging.neonlaw.com
+project: sample-litigation
+
+# Off-origin strings the built bundle may name, each with the reason it is not a
+# request. Taken verbatim from `burshteyn`, which ships the same pdf.js worker.
+allowed_prefixes:
+  # Both are the *base* argument to a `URL` constructor — a syntactic anchor
+  # that lets an attacker-supplied relative reference inside a PDF resolve so it
+  # can be inspected, and in `example.com`'s case so a hash-only change can be
+  # detected. The result is read and discarded. A PDF whose links resolved
+  # against them would be a bug in the viewer rather than a fetch.
+  https://foo.bar: pdf.js URL-parse base — a syntactic anchor, never fetched
+  http://example.com: pdf.js URL-parse base for hash-only detection, never fetched
+  # The Apache-2.0 licence URL, inside a preserved comment banner in the worker.
+  # It is attribution the licence requires be kept, in a comment the engine
+  # never evaluates. Stripping it to satisfy the gate would be removing a
+  # licence notice, which is the one edit here that would actually be wrong.
+  http://www.apache.org/licenses/LICENSE-2.0: Apache-2.0 notice in a comment banner
+  # XFA package and Adobe namespace identifiers. An XFA document declares its
+  # packages by namespace URI and the worker recognises them with `e === "…"`
+  # and `e.startsWith("…")`; read the line any match sits on and it is a string
+  # comparison every time. A PDF able to make the worker fetch a namespace would
+  # be a vulnerability rather than a feature.
+  http://www.xfa.org/schema/: XFA package namespace identifiers — compared, never fetched
+  http://ns.adobe.com/: Adobe XDP, XFDF, and XMP namespace identifiers — compared, never fetched
+
+# Hosts the built bundle may name.
+allowed_hosts:
+  # Not a host: the closing `/` of a regex literal whose last atom is an escaped
+  # slash, followed by `.test(`. CodeMirror's JSX indent rules are full of
+  # `/^\s*<\//.test(…)`, and the scanner reads the `//` as protocol-relative.
+  # A hostname's first label cannot be empty, so a "host" beginning with a dot
+  # resolves nowhere and can never be fetched — the same reasoning the scanner
+  # already applies in `HOST_HAS_A_LABEL` to a run of dots. Recorded here rather
+  # than patched into the scanner so this repository holds the identical gate
+  # script every other Project holds.
+  .test: regex-literal boundary before `.test(` — an empty first label, never fetched

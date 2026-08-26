@@ -171,6 +171,36 @@ jobs:
       # finding nothing to check rather than by being correct.
       - run: pnpm test
 
+      # `navigator.yaml`, parsed and checked before anything reads it. The host
+      # must be a deployment Navigator actually serves and the Project code must
+      # be a lowercase slug, because that string becomes a URL path segment and a
+      # bucket prefix — both compared byte for byte. A typo here would otherwise
+      # surface as a portal published under a prefix nothing serves.
+      - run: python3 .github/navigator.py --check
+
+      # Two files name this Project and nothing else compares them: `navigator.yml`
+      # is the manifest the Navigator CLI reads, and `navigator.yaml` is the one
+      # `navigator.py` and `publish` read to derive the bucket and prefix. They
+      # must agree, or `navigator validate` would check one Project while the
+      # bundle published under another. Consolidating them is the real fix —
+      # tracked separately, because it needs the CLI to accept `host:`.
+      - name: the two manifests name the same Project
+        run: |
+          set -euo pipefail
+          cli="$(python3 -c 'import sys,re;print(re.search(r"^name:\s*(\S+)",open("navigator.yml").read(),re.M).group(1))')"
+          publish="$(python3 .github/navigator.py project)"
+          echo "navigator.yml name:     ${cli}"
+          echo "navigator.yaml project: ${publish}"
+          if [ "${cli}" != "${publish}" ]; then
+              echo "::error::the two manifests disagree; a bundle would publish under the wrong prefix"
+              exit 1
+          fi
+
+      # The origin gate, over the same built bytes `publish` will upload. It runs
+      # in both places on purpose: here it blocks the merge, and there it is the
+      # last check before the bundle is served.
+      - run: python3 .github/no-external-references.py
+
   # The gate over the Markdown and the YAML, which nothing in `pnpm check` reads.
   #
   # The CLI arrives as the Linux tarball from a public Navigator release: one static
