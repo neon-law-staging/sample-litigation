@@ -48,9 +48,10 @@ jobs:
       # not a skipped run, not a red one: none. Nothing goes red, because nothing
       # runs.
       #
-      # That is not hypothetical. `navigator` lost a release to it and
-      # `neon-law/burshteyn` lost a publish to it twice, leaving production on a
-      # stale bundle until it was recovered by hand.
+      # That is not hypothetical. `navigator` lost a release to it and one of the
+      # private Project repositories lost a publish to it twice, leaving production
+      # on a stale bundle until it was recovered by hand. That repository is not
+      # named here — a Project code is a client identifier.
       #
       # So both steps are gated on the App being configured and there is NO
       # fallback to the workflow token. An absent secret arms nothing and leaves

@@ -9,14 +9,19 @@ therefore lands on `main` and starts no workflow at all — not a skipped run, n
 a red one: none. `main` moves with nothing having validated it, and no check
 anywhere goes red to say so.
 
-That is not hypothetical. `navigator` lost a release to it (its PR #95), and
-`neon-law/burshteyn` lost a publish to it twice (PRs #9 and #10), which left
-production serving a stale bundle until it was recovered by hand.
+That is not hypothetical. `navigator` lost a release to it (its PR #95), and one
+of the private Project repositories lost a publish to it twice (its PRs #9 and
+#10), which left production serving a stale bundle until it was recovered by
+hand. That repository is not named here: a Project code is a client identifier
+and does not belong in this codebase. See ENG-262 for the affected portals,
+which names them by positional label.
 
-These staging repositories carry no `publish.yml`, only this `ci.yml`, so what
-the bug costs here is the `ci` validation of every push to `main` rather than a
-publish. The failure is the same shape and just as silent, which is why the
-guard is the same.
+These repositories now carry a `publish.yml` that triggers on `push` to `main`,
+so the bug costs a publish here as well as the `ci` validation of the push — the
+same failure, the same silence, and now the same consequence as the incident
+above. This paragraph used to say there was no `publish.yml`; that stopped being
+true when the portal gained one, which is exactly the kind of drift this guard
+exists to make loud rather than quiet.
 
 The App is `neon-law-staging-merge-queue` (app id 4683165), owned by
 `neon-law-staging` and installed on all of its repositories, so a repository

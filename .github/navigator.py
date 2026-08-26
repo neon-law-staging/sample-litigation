@@ -176,7 +176,8 @@ def _parse(text: str) -> dict[str, object]:
             # the only consumer tests `full.startswith(prefix)`, a bare scheme
             # matched every http and https reference in the bundle. The gate went
             # quiet rather than red, which is the worst way for a gate to fail.
-            # ENG: burshteyn shipped in that state; see the note in the commit.
+            # ENG-262: one Project portal shipped in that state, and is named
+            # there by positional label rather than by Project code.
             key, separator, value = stripped.partition(": ")
             if not separator:
                 raise ConfigError(f"{CONFIG.name}:{number}: `{block}` is a map; write `key: reason`")
