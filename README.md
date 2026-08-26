@@ -171,6 +171,7 @@ src/DiscoveryPage.tsx       the interrogatories and the responses, split by who 
 src/ResponsesPage.tsx       the set served on us, and the drafts waiting to be sworn
 src/TrialPrepPage.tsx       the flashcard deck, and the simulated cross-examination
 src/MotionPage.tsx          the motion: the limitations arithmetic, and what it does not ask for
+src/CaseLibraryPage.tsx     real citations that are not Count II authorities
 src/RelationshipGraph.tsx   the force-directed party/evidence web
 src/PdfViewer.tsx           the document viewer: canvas, text layer, find bar
 src/pdf.ts                  the pdf.js seam — worker wiring, opening, text extraction
@@ -183,6 +184,7 @@ src/soulContract.ts         the fixture data for Count II, including the graph
 src/people.ts               who may read the matter, and who the matter is about
 src/glossary.ts             Navigator's vocabulary, scoped to this bundle
 src/research.ts             the authorities — real law, verified before it was written down
+src/caseLibrary.ts          real citations outside Count II's scope — not fixture, not authority
 src/discovery.ts            the interrogatory exchange, and the rules it is measured against
 src/responses.ts            the set served on us, the drafts under it, and the derived deadline
 src/trialPrep.ts            the prep cards, the ground rules, and the mock examination

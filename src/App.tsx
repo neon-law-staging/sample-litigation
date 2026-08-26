@@ -4,6 +4,7 @@
 import { ArrowRight, ExternalLink } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
+import { CaseLibraryPage } from './CaseLibraryPage'
 import { DiscoveryPage } from './DiscoveryPage'
 import { IntroductionPage } from './IntroductionPage'
 import { MotionPage } from './MotionPage'
@@ -37,7 +38,14 @@ import { cn } from '@/lib/utils'
  * behave differently gets edited instead of wrapped.
  */
 
-type View = 'overview' | 'introduction' | 'discovery' | 'interrogatories' | 'trial-prep' | 'motion'
+type View =
+  | 'overview'
+  | 'introduction'
+  | 'discovery'
+  | 'interrogatories'
+  | 'trial-prep'
+  | 'motion'
+  | 'case-library'
 
 /**
  * Routing by fragment, deliberately.
@@ -55,6 +63,7 @@ const VIEW_BY_HASH: Record<string, View> = {
   '#interrogatories': 'interrogatories',
   '#trial-prep': 'trial-prep',
   '#motion': 'motion',
+  '#case-library': 'case-library',
 }
 
 function viewFromHash(): View {
@@ -80,6 +89,7 @@ export function App() {
         {view === 'interrogatories' ? <ResponsesPage /> : null}
         {view === 'trial-prep' ? <TrialPrepPage /> : null}
         {view === 'motion' ? <MotionPage /> : null}
+        {view === 'case-library' ? <CaseLibraryPage /> : null}
         {view === 'overview' ? <Overview /> : null}
       </main>
 
@@ -113,6 +123,11 @@ function TopNav({ view }: { view: View }) {
       current: view === 'trial-prep',
     },
     { label: 'Motion', href: portalPath('#motion'), current: view === 'motion' },
+    {
+      label: 'Case Library',
+      href: portalPath('#case-library'),
+      current: view === 'case-library',
+    },
   ]
 
   return (

@@ -51,6 +51,7 @@ allowed_prefixes:
   # repository cannot settle; see the Linear issue.
   https://www.leg.state.nv.us/CourtRules/: NRCP citation targets — `href`, clicked, never fetched
   https://app.midpage.ai/: case and statute citation targets — `href`, clicked, never fetched
+  https://www.courtlistener.com/: case citation targets — `href`, clicked, never fetched
   # Attribution for the editor component, rendered as a link in the UI.
   https://codemirror.net/: CodeMirror attribution link in the notation editor
 
