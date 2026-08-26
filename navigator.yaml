@@ -14,7 +14,9 @@ host: staging.neonlaw.com
 project: sample-litigation
 
 # Off-origin strings the built bundle may name, each with the reason it is not a
-# request. Taken verbatim from `burshteyn`, which ships the same pdf.js worker.
+# request. Taken verbatim from the one Project repository that ships the same
+# pdf.js worker, which ENG-262 names by positional label. A Project code is a
+# client identifier and does not belong in this codebase.
 allowed_prefixes:
   # Both are the *base* argument to a `URL` constructor — a syntactic anchor
   # that lets an attacker-supplied relative reference inside a PDF resolve so it
