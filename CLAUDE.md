@@ -53,7 +53,7 @@ changing anything structural, and update it when the answer it gives stops being
 only thing that reads them is the Navigator CLI:
 
 ```bash
-brew install neon-law-foundation/navigator/navigator   # macOS, and tap-qualified on purpose
+brew install neon-law-source-code/navigator/navigator   # macOS, and tap-qualified on purpose
 pnpm validate                                          # navigator validate, over the whole tree
 ```
 
