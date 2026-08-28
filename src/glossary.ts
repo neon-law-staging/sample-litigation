@@ -77,7 +77,7 @@ export const GLOSSARY: GlossaryTerm[] = [
     anchor: 'project',
     definition:
       'The durable container every document on a matter lives in. It has a status, is always opened against an Entity, and its `code` — lowercase letters, digits, and single hyphens — is the matter\'s URL rather than an internal id.',
-    here: 'The Project code is `sample-litigation`, which is why this bundle is served at `/app/projects/sample-litigation/portal/` and why `vite.config.ts` bakes exactly that path in as its base. `navigator.yml` names the same code in one line.',
+    here: 'The Project code is `sample-litigation`, which is why this bundle is served at `/app/projects/sample-litigation/portal/` and why `vite.config.ts` bakes exactly that path in as its base. `navigator.yaml` names the same code, keyed `project:`.',
     see: ['matter', 'entity', 'participation'],
   },
   {

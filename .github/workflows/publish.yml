@@ -128,8 +128,10 @@ jobs:
       #
       # `dist_dir` is the one input this layout needs. The action defaults to
       # `portal/dist`; this repository's portal *is* the root, so it is `dist`.
-      # `repository` is left at its default, which is this repository's name and
-      # is also the Project code.
+      # `repository` is not passed: `application-publish` now reads the Project
+      # code from this repository's own `navigator.yaml` first (`project:`),
+      # falling back to the repository name only if that manifest were absent —
+      # and the two already agree here.
       #
       # The org is `neon-law-source-code`, and that is load-bearing rather than
       # cosmetic. **Actions does not resolve a `uses:` across an org rename** —

@@ -1,8 +1,0 @@
-# The Navigator Project this bundle mounts on.
-#
-# Navigator re-reads this file at boot rather than trusting the directory the
-# bundle was staged in, and refuses a bundle naming a different Project —
-# publishing one would put this matter's application on another matter's
-# portal. So this one line is the whole reason three sample bundles can be
-# staged side by side safely.
-name: sample-litigation
