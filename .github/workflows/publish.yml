@@ -133,14 +133,30 @@ jobs:
       # falling back to the repository name only if that manifest were absent —
       # and the two already agree here.
       #
-      # The org is `neon-law-source-code`, and that is load-bearing rather than
-      # cosmetic. **Actions does not resolve a `uses:` across an org rename** —
-      # it reports `Unable to resolve action. Repository not found`, which reads
-      # like a deleted action rather than a moved one. `neon-law-foundation`
-      # renamed to `neon-law-source-code`, so any `uses:` still pointing at the
-      # old org is that bug waiting. Note this differs from `ci`, which
-      # downloads the CLI *release* from `neon-law-foundation/navigator` — a
-      # download follows the redirect, so that one is fine as it stands.
+      # A reference that names an org the Firm no longer holds is a defect,
+      # whether it is Actions or `curl` that dereferences it. One rule, two
+      # failure modes — not a rule with an exception.
+      #
+      # A `uses:` fails loudly.
+      # Actions does not resolve a `uses:` across an org rename — it reports
+      # `Unable to resolve action. Repository not found`, which reads like a
+      # deleted action rather than a moved one. The pre-rename handle was
+      # `neon-law-foundation`, so any `uses:` still naming it is that bug
+      # waiting.
+      #
+      # A download fails silently, and it is the half that executes.
+      # **A redirect is a convenience, not a trust boundary.** GitHub serves a
+      # rename redirect only while the old handle stays unregistered, and
+      # whoever registers it next owns the tarball `ci` unpacks and runs. The
+      # redirect resolving is what proves the old handle is unowned — the
+      # exposure, not the reassurance. An identifier the Firm no longer holds
+      # is not the Firm's, whatever still answers when it is dereferenced.
+      #
+      # A pinned digest is a second layer, not a substitute. `pnpm` checks the
+      # `navigator-ux` tarball against `integrity:` in `pnpm-lock.yaml` and
+      # fails closed; `ci` pipes `curl` into `tar` with nothing to check
+      # against. A digest narrows what a taken handle can do — it does not make
+      # one safe to keep naming.
       #
       # The ref is `26.8.23`, matching the Project repositories under
       # `neon-law/`. It cannot be read from a variable — `uses:` is resolved
