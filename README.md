@@ -1,9 +1,9 @@
 # Navigator Sample Project
 
-The reference **project application** for [Navigator](https://github.com/neon-law-source-code/navigator): a client portal
-for the fixture matter *Cruller v. Prine*, built with Vite, React 19, Tailwind CSS, and shadcn-style components owned in
-this repository — plus [navigator-ux](https://github.com/neon-law-source-code/navigator-ux) on the documents tab, where
-it frames a PDF viewer this repository owns.
+The reference **project application** for [Navigator](https://github.com/neon-law-source-code/navigator): a client
+portal for the fixture matter *Cruller v. Prine*, built with Vite, React 19, Tailwind CSS, and shadcn-style components
+owned in this repository — plus [navigator-ux](https://github.com/neon-law-source-code/navigator-ux) on the documents
+tab, where it frames a PDF viewer this repository owns.
 
 It exists so that "attach a React app to a matter" has a worked example a contributor can read, clone, and copy — and so
 Navigator's own local development loop has something real to build and serve instead of a hardcoded HTML string.
@@ -137,11 +137,11 @@ pnpm check      # what a contributor should run before pushing
 The dev server serves under the real mount path, not `/`, because the base is baked in and a dev loop that disagrees
 with production about where the app lives is a dev loop that hides base bugs.
 
-[navigator-ux's GitHub Release](https://github.com/neon-law-source-code/navigator-ux/releases) is where the library comes
-from: it is not published to npm at all, and that is why `pnpm install` needs no registry account, no token, and no
-`.npmrc`. The URL in `package.json` pins one exact version, so upgrading is an edit to that URL rather than a range that
-widens on its own, and `pnpm-lock.yaml` records the tarball's sha512 — a clean clone resolves the same bytes rather than
-whatever the URL serves that day.
+[navigator-ux's GitHub Release](https://github.com/neon-law-source-code/navigator-ux/releases) is where the library
+comes from: it is not published to npm at all, and that is why `pnpm install` needs no registry account, no token, and
+no `.npmrc`. The URL in `package.json` pins one exact version, so upgrading is an edit to that URL rather than a range
+that widens on its own, and `pnpm-lock.yaml` records the tarball's sha512 — a clean clone resolves the same bytes rather
+than whatever the URL serves that day.
 
 | Command | What it does |
 | --- | --- |
