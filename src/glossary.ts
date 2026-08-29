@@ -45,7 +45,7 @@ export interface GlossaryTerm {
   see?: string[]
 }
 
-const DOCS = 'https://github.com/neon-law-foundation/navigator/blob/main/docs'
+const DOCS = 'https://github.com/neon-law-source-code/navigator/blob/main/docs'
 
 const FILE: Record<GlossarySource, string> = {
   glossary: 'glossary.md',
