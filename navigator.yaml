@@ -42,6 +42,17 @@ allowed_prefixes:
   # never evaluates a comment. Stripping it to satisfy the gate would be removing
   # a licence notice, which is the one edit here that would actually be wrong.
   https://github.com/neon-law-foundation/: AGPL source pointer in a comment banner
+  # Navigator's own repository and its `docs/`, rendered as links in the UI: the
+  # "Navigator on GitHub" button in `src/App.tsx` and the canonical-entry link
+  # each glossary term carries, built by `canonicalUrl` in `src/glossary.ts`.
+  # Both are `href` targets on an `<a target="_blank" rel="noreferrer noopener">`
+  # that a reader may click. Nothing fetches either one — no `fetch`, no
+  # `preload`, no dynamic import — so the browser issues no request for them
+  # until a person asks it to, and `noreferrer` means that click carries no
+  # portal URL with it. Separate from the `neon-law-foundation` prefix above,
+  # which stays: that one admits the AGPL banner `vite.config.ts` prepends to
+  # every emitted chunk, and retiring it is a licence question, not this one.
+  https://github.com/neon-law-source-code/: Navigator repository and docs links — `href`, clicked, never fetched
   # Authority links a reader clicks, not requests the portal makes. The matter
   # cites NRCP 33 and four Nevada cases, and citing law without linking to it is
   # not an option this practice takes. They are `href` targets in fixture data

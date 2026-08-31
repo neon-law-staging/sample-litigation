@@ -403,7 +403,7 @@ function Overview() {
               </p>
               <Button asChild variant="outline" size="sm">
                 <a
-                  href="https://github.com/neon-law-foundation/navigator"
+                  href="https://github.com/neon-law-source-code/navigator"
                   target="_blank"
                   rel="noreferrer noopener"
                 >
