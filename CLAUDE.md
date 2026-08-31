@@ -1,29 +1,11 @@
 # Working in this repository
 
-## Stay inside this repository
-
-Everything needed to build, run, test, and understand this bundle is in this repository. Read and edit only what is
-inside it. Do not go looking through the rest of the machine — not the home directory, not sibling checkouts, not other
-Navigator repositories, not the system temp directory.
-
-That includes the places it is tempting to reach for:
-
-* **Another checkout of Navigator itself.** The route this bundle mounts under belongs to Navigator, and `README.md`
-  records what the contract is. Read the README rather than a copy of `portal/src/project_portal.rs` that happens to be
-  on this machine — it may be a different revision than the one serving this bundle, and a contract read from the wrong
-  revision is worse than one read from documentation.
-* **A sibling sample project.** The other sample bundles solve the same problem differently on purpose. Copying from one
-  of them by hand imports a decision without importing the reason for it.
-* **Anything under `~/`.** No credential, no `.npmrc`, no global config is needed here: `pnpm install` runs with no
-  registry account and no token, which is the point of installing navigator-ux from a public GitHub Release.
-
-`node_modules/` **is** inside the repository and is fair game — it is where the published navigator-ux tokens, types,
-and stylesheet actually live, and reading them is how you check what the library provides rather than guessing at it.
-
-If a task genuinely cannot be done without something outside this tree, say so and ask. Do not go find it.
-
-Scratch files belong outside the repository, in the session's scratchpad. A temporary script left in the working tree
-becomes somebody's confusing diff.
+The `stay-in-repo` skill under `.claude/skills/` — synced into this checkout by `navigator projects repository
+sync-skills` — is the scope rule to read before reaching outside this tree. One thing it does not cover, because it is
+specific to this bundle rather than shared across every Project repository: **another checkout of Navigator itself.**
+The route this bundle mounts under belongs to Navigator, and `README.md` records what the contract is. Read the README
+rather than a copy of `portal/src/project_portal.rs` that happens to be on this machine — it may be a different revision
+than the one serving this bundle, and a contract read from the wrong revision is worse than one read from documentation.
 
 ## Everything here is fixture data
 
