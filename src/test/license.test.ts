@@ -1,4 +1,4 @@
-// Copyright (C) 2026 Neon Law Foundation.
+// Copyright (C) 2026 Shook Law PLLC.
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { describe, expect, it } from 'vitest'
@@ -19,7 +19,7 @@ import { describe, expect, it } from 'vitest'
  */
 
 const SPDX = 'SPDX-License-Identifier: AGPL-3.0-or-later'
-const COPYRIGHT = 'Copyright (C) 2026 Neon Law Foundation.'
+const COPYRIGHT = 'Copyright (C) 2026 Shook Law PLLC.'
 const BUILD_FIRST = 'no dist/ — run `pnpm build` before `pnpm test`, or run `pnpm check`'
 
 /*

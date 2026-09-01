@@ -1,4 +1,4 @@
-// Copyright (C) 2026 Neon Law Foundation.
+// Copyright (C) 2026 Shook Law PLLC.
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import tailwindcss from '@tailwindcss/vite'
@@ -31,7 +31,7 @@ const MOUNT = '/app/projects/sample-litigation/portal/'
  */
 const LICENSE_BANNER = `/*!
  * Cruller v. Prine — Client Portal.
- * Copyright (C) 2026 Neon Law Foundation.
+ * Copyright (C) 2026 Shook Law PLLC.
  * SPDX-License-Identifier: AGPL-3.0-or-later
  *
  * Source: https://github.com/neon-law-foundation/navigator-sample-project

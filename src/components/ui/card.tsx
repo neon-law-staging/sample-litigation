@@ -1,4 +1,4 @@
-// Copyright (C) 2026 Neon Law Foundation.
+// Copyright (C) 2026 Shook Law PLLC.
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type { ComponentProps } from 'react'
