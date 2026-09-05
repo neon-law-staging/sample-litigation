@@ -199,7 +199,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      NAVIGATOR_VERSION: 26.8.22-hotfix.23
+      NAVIGATOR_VERSION: 26.9.4
     steps:
       - uses: actions/checkout@v7
 

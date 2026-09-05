@@ -55,7 +55,7 @@ import {
   DownloadGrid,
   LinkButton,
   Panel,
-} from '@neon-law-foundation/navigator-ux'
+} from '@neon-law-source-code/navigator-ux'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'

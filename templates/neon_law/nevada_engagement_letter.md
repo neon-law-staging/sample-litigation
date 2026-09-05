@@ -1,5 +1,5 @@
 ---
-kind: retainer
+kind: letter
 title: Engagement Letter — Arbitration (Nevada)
 jurisdiction: NV
 respondent_type: person
