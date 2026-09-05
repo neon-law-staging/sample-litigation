@@ -30,7 +30,7 @@
 // Like `index.css`, it fetches nothing at runtime. The fonts are relative URLs
 // inside the package, so Vite emits them as assets under the mount and they are
 // served same-origin — which is what keeps the CSP with no off-origin sources.
-import '@neon-law-foundation/navigator-ux/styles.css'
+import '@neon-law-source-code/navigator-ux/styles.css'
 
 // The portal's own stylesheet, imported exactly once, at the entry. It carries
 // the Tailwind build and the theme variables every component in

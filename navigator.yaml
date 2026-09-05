@@ -41,7 +41,14 @@ allowed_prefixes:
   # chunk and stylesheet. The licence requires the notice be kept and the engine
   # never evaluates a comment. Stripping it to satisfy the gate would be removing
   # a licence notice, which is the one edit here that would actually be wrong.
-  https://github.com/neon-law-foundation/: AGPL source pointer in a comment banner
+  https://github.com/neon-law-staging/: AGPL source pointer in a comment banner
+  # Navigator's own repository and its `docs/` pages — the "what is a notation?"
+  # links in the glossary and the source link in the footer. `href` targets a
+  # reader clicks, never fetched by the portal. This is a separate entry from the
+  # banner above because the two live in different orgs: the sample projects moved
+  # to `neon-law-staging` and Navigator itself to `neon-law-source-code`, so one
+  # prefix can no longer stand for both.
+  https://github.com/neon-law-source-code/: Navigator repository and docs links — `href`, clicked, never fetched
   # Authority links a reader clicks, not requests the portal makes. The matter
   # cites NRCP 33 and four Nevada cases, and citing law without linking to it is
   # not an option this practice takes. They are `href` targets in fixture data
