@@ -1,4 +1,4 @@
-# Navigator Sample Project
+# Navigator Sample Project — Litigation
 
 The reference **project application** for [Navigator](https://github.com/neon-law-source-code/navigator): a client
 portal for the fixture matter *Cruller v. Prine*, built with Vite, React 19, Tailwind CSS, and shadcn-style components
