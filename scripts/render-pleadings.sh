@@ -31,7 +31,7 @@
 # typesetter to ship a React app. Re-run this whenever a `.typ` file changes.
 #
 # `pleadings/` is a top-level directory rather than `templates/typst/` because
-# `pnpm validate:templates` runs `navigator validate templates` over the whole of
+# `pnpm validate:templates` runs `navigator validate notations` over the whole of
 # `templates/`, and a `.typ` file in there is a file the notation rule set has an
 # opinion about and should not.
 set -euo pipefail

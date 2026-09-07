@@ -151,7 +151,7 @@ than whatever the URL serves that day.
 | `pnpm typecheck` | `tsc --noEmit` on its own. |
 | `pnpm test` | vitest. **Needs a build first** — the bundle gate asserts on real output rather than skipping. |
 | `pnpm check` | lint, typecheck, build, test, in that order. |
-| `pnpm validate:templates` | `navigator validate templates` — the notation rule set, over `templates/`. |
+| `pnpm validate:templates` | `navigator validate notations` — the notation rule set, over `notations/`. |
 | `pnpm render:documents` | Re-render each notation template to `public/documents/`. Needs the Navigator CLI. |
 | `pnpm render:pleadings` | Re-compile each Typst pleading to `public/documents/`. Needs `typst`, and nothing else. |
 
@@ -191,7 +191,7 @@ src/trialPrep.ts            the prep cards, the ground rules, and the mock exami
 src/documents.ts            the rendered PDFs and the templates behind them
 src/motion.ts               the motion, and the limitations arithmetic it derives rather than states
 src/mount.ts                links derived from the base rather than written out
-templates/neon_law/*.md     notation templates; the source of three of the PDFs
+notations/neon_law/*.md     notation templates; the source of three of the PDFs
 pleadings/pleading-paper.typ the 28-line grid, the rules, and the caption box
 pleadings/*.typ             Typst pleadings; the source of the fourth PDF
 scripts/render-documents.sh `navigator template render`, once per template
@@ -221,7 +221,7 @@ app that ignores the theme.
 ### Documents
 
 No PDF under `public/documents/` is hand-authored, and there are two renderers rather than one. Three of the four are
-rendered by `navigator template render` from a notation template in `templates/neon_law/`; the fourth is the motion,
+rendered by `navigator template render` from a notation template in `notations/neon_law/`; the fourth is the motion,
 compiled from Typst, and *The motion is typeset, not templated* below is why it is not a notation template like the
 others.
 
@@ -404,7 +404,7 @@ who edits the motion does not have to install Navigator to re-render it. Both ou
 Vite, and `src/test/bundle.test.ts` asserts the motion reaches `dist/` separately from the three notation PDFs — nothing
 in `vite build` knows Typst exists, so nothing in `vite build` would notice it going missing.
 
-`pnpm validate:templates` runs `navigator validate templates` over the whole of `templates/`, which is why `pleadings/`
+`pnpm validate:templates` runs `navigator validate notations` over the whole of `notations/`, which is why `pleadings/`
 is a top-level directory rather than `templates/typst/`: a `.typ` file in there is a file the notation rule set has an
 opinion about and should not.
 

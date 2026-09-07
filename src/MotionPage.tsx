@@ -459,7 +459,7 @@ export function MotionPage() {
               , MIT-licensed and bundled from npm rather than a CDN, so it works under the
               portal&apos;s <code className="font-mono">script-src &apos;self&apos;</code> CSP.
               Nothing typed here is saved or rendered — it lives only in this tab, and it is not
-              one of the templates in <code className="font-mono">templates/neon_law/</code>.
+              one of the templates in <code className="font-mono">notations/neon_law/</code>.
             </p>
             <Button variant="outline" size="sm" onClick={resetNotation}>
               <RotateCcw /> Reset
