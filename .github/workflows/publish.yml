@@ -158,11 +158,11 @@ jobs:
       # against. A digest narrows what a taken handle can do — it does not make
       # one safe to keep naming.
       #
-      # The ref is `26.9.8-rc.1`, matching the Project repositories under
+      # The ref is `26.9.6`, matching the Project repositories under
       # `neon-law/`. It cannot be read from a variable — `uses:` is resolved
       # before expressions are evaluated — so a bump is edited here by hand.
       - name: publish to ${{ steps.navigator.outputs.bucket }}/${{ steps.navigator.outputs.prefix }}
-        uses: neon-law-source-code/navigator/.github/actions/application-publish@26.9.8-rc.1
+        uses: neon-law-source-code/navigator/.github/actions/application-publish@26.9.6
         with:
           applications_bucket: ${{ steps.navigator.outputs.bucket }}
           workload_identity_provider: ${{ vars.NAVIGATOR_APP_PUBLISHER_WIF_PROVIDER }}
