@@ -27,8 +27,8 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3
       '@neon-law-source-code/navigator-ux':
-        specifier: https://github.com/neon-law-source-code/navigator-ux/releases/download/v26.9.4/navigator-ux-v26.9.4.tgz
-        version: https://github.com/neon-law-source-code/navigator-ux/releases/download/v26.9.4/navigator-ux-v26.9.4.tgz(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: https://github.com/neon-law-source-code/navigator-ux/releases/download/v26.9.7/navigator-ux-v26.9.7.tgz
+        version: https://github.com/neon-law-source-code/navigator-ux/releases/download/v26.9.7/navigator-ux-v26.9.7.tgz(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@radix-ui/react-separator':
         specifier: ^1.1.15
         version: 1.1.15(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -361,9 +361,9 @@ packages:
     resolution: {integrity: sha512-26wVFEgs6gbe7wmzCrud1pK8q6oOgcUu7OOF24BuazB8ZUCskU9ZSLrCjoWIFVxx09rjAxsXxPleaWowHvdPCA==}
     engines: {node: '>= 10'}
 
-  '@neon-law-source-code/navigator-ux@https://github.com/neon-law-source-code/navigator-ux/releases/download/v26.9.4/navigator-ux-v26.9.4.tgz':
-    resolution: {integrity: sha512-KqB8Iv0oULHNP+kRN5zWobYisY1KSDYS7XjgCItR7hsT2oZSXwbgXEODG9OXBB7uGUfbn9pk97hs1IPCjGePGw==, tarball: https://github.com/neon-law-source-code/navigator-ux/releases/download/v26.9.4/navigator-ux-v26.9.4.tgz}
-    version: 26.9.4
+  '@neon-law-source-code/navigator-ux@https://github.com/neon-law-source-code/navigator-ux/releases/download/v26.9.7/navigator-ux-v26.9.7.tgz':
+    resolution: {integrity: sha512-B8s6d2gfgp62+NVx50YDDn6mi3wIS+kvEEkuo1RZra1psgyZGeaquGcklq4nbECJSO/1lw0ZGa/d+aZpcOteRA==, tarball: https://github.com/neon-law-source-code/navigator-ux/releases/download/v26.9.7/navigator-ux-v26.9.7.tgz}
+    version: 26.9.7
     engines: {node: '>=22'}
     peerDependencies:
       react: ^19.0.0
@@ -2036,7 +2036,7 @@ snapshots:
       '@napi-rs/canvas-win32-x64-msvc': 1.0.7
     optional: true
 
-  '@neon-law-source-code/navigator-ux@https://github.com/neon-law-source-code/navigator-ux/releases/download/v26.9.4/navigator-ux-v26.9.4.tgz(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@neon-law-source-code/navigator-ux@https://github.com/neon-law-source-code/navigator-ux/releases/download/v26.9.7/navigator-ux-v26.9.7.tgz(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       d3-array: 3.2.4
       d3-force: 3.0.0
