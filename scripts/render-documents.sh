@@ -38,7 +38,7 @@ trespass to land, and rescission of the alleged instrument conveying the \
 client's soul — and in the Eighth Judicial District Court action already on \
 file to the extent any claim remains before that court."
 
-navigator template render templates/neon_law/nevada.md \
+navigator template render notations/neon_law/nevada.md \
   --out public/documents/notice-of-rescission.pdf \
   --answer person__client="$CLIENT" \
   --answer custom_datetime__offer_date="$OFFER" \
@@ -46,7 +46,7 @@ navigator template render templates/neon_law/nevada.md \
   --answer custom_datetime__discovery_date="$DISCOVERY" \
   --answer custom_datetime__notice_date="$NOTICE"
 
-navigator template render templates/neon_law/nevada_engagement_letter.md \
+navigator template render notations/neon_law/nevada_engagement_letter.md \
   --out public/documents/engagement-letter-dermot-cruller.pdf \
   --answer person__client="$CLIENT" \
   --answer person__adverse_party="$ADVERSE" \
@@ -56,7 +56,7 @@ navigator template render templates/neon_law/nevada_engagement_letter.md \
   --answer custom_single_choice__arbitration_forum="$FORUM" \
   --answer custom_single_choice__governing_law="Nevada"
 
-navigator template render templates/neon_law/nevada_affidavit.md \
+navigator template render notations/neon_law/nevada_affidavit.md \
   --out public/documents/affidavit-odile-cruller.pdf \
   --answer person__client="$CLIENT" \
   --answer custom_datetime__offer_date="$OFFER" \

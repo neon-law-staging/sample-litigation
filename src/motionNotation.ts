@@ -7,12 +7,12 @@ import { ACCRUAL_CANDIDATES, COURT, LIMITATIONS_YEARS, MOTION, NARROWEST_MARGIN,
  * What the motion would look like as a notation template, for the reader who
  * wants to see the format the other three documents actually use.
  *
- * This is not one of the templates in `templates/neon_law/` and never will be
+ * This is not one of the templates in `notations/neon_law/` and never will be
  * — the card beside it on the page, and `README.md` before that, explain why
  * pleading paper has no render profile here. It exists only as data for
  * `MotionPage`, is never walked by `navigator validate`, and never reaches
  * `navigator template render`. The frontmatter and body below borrow the shape
- * of `templates/neon_law/nevada.md` — `questionnaire` chained field to field,
+ * of `notations/neon_law/nevada.md` — `questionnaire` chained field to field,
  * `custom_questions` prompting for the ones a lawyer would actually be asked,
  * a `lawyer_review` gate in `workflow` — and pull their numbers from
  * `motion.ts` rather than restate them, the same discipline `motion.ts` itself

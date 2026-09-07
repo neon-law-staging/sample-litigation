@@ -878,7 +878,7 @@ function ResearchTab() {
  * The documents tab.
  *
  * Every PDF here is produced by `navigator template render` from a notation
- * template in `templates/neon_law/`, which is why each card names the template
+ * template in `notations/neon_law/`, which is why each card names the template
  * and its code: the provenance is the point. `pnpm render:documents`
  * regenerates all three.
  *

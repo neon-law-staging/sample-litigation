@@ -160,7 +160,7 @@ export const GLOSSARY: GlossaryTerm[] = [
     anchor: 'template',
     definition:
       'A static blueprint for one legal document, in four parts: metadata, a questionnaire, a workflow, and the prose body carrying `{{placeholder}}` slots. It asks nothing on its own — until a respondent is bound to it, it is inert, useful for linting and preview and nothing else.',
-    here: 'Three of them, in `templates/neon_law/`. Each is the source of exactly one PDF under `public/documents/`, and `pnpm validate:templates` holds all three to the same rule set the renderer does.',
+    here: 'Three of them, in `notations/neon_law/`. Each is the source of exactly one PDF under `public/documents/`, and `pnpm validate:templates` holds all three to the same rule set the renderer does.',
     see: ['notation', 'questionnaire', 'output'],
   },
   {
@@ -221,7 +221,7 @@ export const GLOSSARY: GlossaryTerm[] = [
     anchor: 'rule',
     definition:
       'One machine-checkable constraint on a Markdown notation, with a stable identifier. Three families: `M` for Markdown hygiene, `N` for notation-template shape, and `S101` for the 120-character line limit. The validator and the renderer read the same set, so a template that renders is a template that passed.',
-    here: '`pnpm validate:templates` runs them over `templates/`. It is not in CI, because it needs the Navigator CLI and this repository will not make a React build wait on a Rust toolchain — so run it locally whenever a template changes.',
+    here: '`pnpm validate:templates` runs them over `notations/`. It is not in CI, because it needs the Navigator CLI and this repository will not make a React build wait on a Rust toolchain — so run it locally whenever a template changes.',
     see: ['template', 'question-type'],
   },
   {

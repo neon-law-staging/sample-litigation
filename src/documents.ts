@@ -5,7 +5,7 @@
  * The documents in the matter.
  *
  * All three PDFs are real files produced by `navigator template render` from
- * the notation templates in `templates/neon_law/`, and `pnpm render:documents`
+ * the notation templates in `notations/neon_law/`, and `pnpm render:documents`
  * regenerates them. Nothing here is hand-authored PDF: if the prose in a
  * document is wrong, the template is wrong, and the fix is upstream of this
  * file.
@@ -75,7 +75,7 @@ export const DOCUMENTS: MatterDocument[] = [
     title: 'Engagement Letter',
     kind: 'Engagement letter',
     path: 'documents/engagement-letter-dermot-cruller.pdf',
-    template: 'templates/neon_law/nevada_engagement_letter.md',
+    template: 'notations/neon_law/nevada_engagement_letter.md',
     code: 'engagement_letter__nevada',
     format: 'letter',
     date: '2026-04-20',
@@ -89,7 +89,7 @@ export const DOCUMENTS: MatterDocument[] = [
     title: 'Notice of Rescission',
     kind: 'Notice',
     path: 'documents/notice-of-rescission.pdf',
-    template: 'templates/neon_law/nevada.md',
+    template: 'notations/neon_law/nevada.md',
     code: 'rescission_notice__nevada',
     format: 'plain',
     date: '2026-05-02',
@@ -103,7 +103,7 @@ export const DOCUMENTS: MatterDocument[] = [
     title: 'Affidavit of Odile Cruller',
     kind: 'Affidavit',
     path: 'documents/affidavit-odile-cruller.pdf',
-    template: 'templates/neon_law/nevada_affidavit.md',
+    template: 'notations/neon_law/nevada_affidavit.md',
     code: 'witness_affidavit__nevada',
     format: 'plain',
     date: '2026-06-11',

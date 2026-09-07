@@ -21,7 +21,7 @@
     "check": "pnpm lint && pnpm typecheck && pnpm build && pnpm test",
     "render:documents": "./scripts/render-documents.sh",
     "render:pleadings": "./scripts/render-pleadings.sh",
-    "validate:templates": "navigator validate templates"
+    "validate:templates": "navigator validate notations"
   },
   "dependencies": {
     "@codemirror/lang-markdown": "^6.5.2",
