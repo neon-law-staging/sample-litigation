@@ -36,6 +36,7 @@ COMPLETION="14 April 2026"
 DISCOVERY="15 April 2026"
 ENGAGED="20 April 2026"
 NOTICE="2 May 2026"
+ANSWERED="31 August 2026"
 FORUM="JAMS, seated in Las Vegas, Nevada"
 SCOPE="Representing the client in the arbitration of his claims against Wendell \
 Prine arising from the doughnut offered over the hedge on 1 April 2025 — \
@@ -72,5 +73,10 @@ navigator notations render notations/neon_law/nevada_affidavit.md \
   --answer custom_datetime__offer_date="$OFFER" \
   --answer custom_datetime__completion_date="$COMPLETION" \
   --answer custom_datetime__discovery_date="$DISCOVERY"
+
+navigator notations render notations/neon_law/nevada_answer_to_counterclaim.md \
+  --out public/documents/answer-to-counterclaim-dermot-cruller.pdf \
+  --answer person__client="$CLIENT" \
+  --answer custom_datetime__answer_date="$ANSWERED"
 
 echo "rendered $(ls -1 public/documents/*.pdf | wc -l | tr -d ' ') document(s) to public/documents/"

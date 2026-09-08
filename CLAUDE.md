@@ -84,10 +84,10 @@ Four things about writing prose that passes, none of them obvious from the messa
 * **Italics inside a list item bulleted with an asterisk report M037.** The bullet's own asterisk is counted as an
   inline marker. A dash bullet has no such problem, and M004 holds a file to whichever character its first bullet used.
 
-The classification matters more here than in a repository of plain documentation. `notations/neon_law/` holds four
+The classification matters more here than in a repository of plain documentation. `notations/neon_law/` holds five
 notations, and `navigator validate` is the only thing in the tree that reads their `questionnaire:` and `workflow:`
 state machines at all — `pnpm check` never opens them, and `pnpm validate:templates` is the same check narrowed to that
-folder. It currently reports four N112 warnings there, one per template, each a `lawyer_review` step the workflow can
+folder. It currently reports five N112 warnings there, one per template, each a `lawyer_review` step the workflow can
 reach whose automation is not built yet. That is the rule doing its job rather than noise to silence: a transition
 naming something nothing implements is exactly what a reader of this repository would otherwise copy.
 

@@ -4,11 +4,12 @@
 /**
  * The authorities behind Count II.
  *
- * Unlike everything else in this bundle, the citations below are **real**. They
- * were pulled from Midpage's corpus and each one was run through the opinion
- * analyzer before it was written down, so every `quote` here is verbatim from
- * the opinion or statute named beside it and every `proposition` is the holding
- * the analyzer confirmed that text supports.
+ * Unlike everything else in this bundle, the citations below are **real**. Most
+ * were pulled from Midpage's corpus and run through the opinion analyzer before
+ * being written down; `dr-horton` came from CourtListener's full opinion text
+ * instead, because that was the corpus reachable at the time. Either way every
+ * `quote` here is verbatim from the opinion or statute named beside it and every
+ * `proposition` is the holding the source text was confirmed to support.
  *
  * That distinction matters enough to keep in the type: `Authority.verified`
  * exists so the page can say, on the face of each card, that the law is real
@@ -82,6 +83,25 @@ export const AUTHORITIES: Authority[] = [
     verified: true,
   },
   {
+    id: 'dr-horton',
+    cite: 'D.R. Horton, Inc. v. Green, 120 Nev. 549, 96 P.3d 1159 (2004)',
+    court: 'Nev.',
+    year: '2004',
+    issue: 'formation',
+    leaning: 'dermot',
+    proposition:
+      'Nevada will not enforce a contract term as unconscionable only where both procedural and substantive unconscionability are present, on a sliding scale where less of one is needed as the other grows — procedural asking whether a party had a meaningful opportunity to agree to the term, substantive asking whether the term is one-sided.',
+    quote:
+      'Generally, both procedural and substantive unconscionability must be present in order for a court to exercise its discretion to refuse to enforce a . . . clause as unconscionable. . . . A clause is procedurally unconscionable when a party lacks a meaningful opportunity to agree to the clause terms either because of unequal bargaining power, as in an adhesion contract, or because the clause and its effects are not readily ascertainable upon a review of the contract.',
+    scope:
+      'Decided over an arbitration clause in a home-purchase agreement, and the court held the UCC unconscionability provision, NRS 104.2302, does not reach real estate at all because a home is not a "good." It does not set a bright line for how one-sided a term must be, and it measures procedural unconscionability at formation, not by what the term turns out to cost later.',
+    application:
+      'The unconscionability ground in the rescission notice needs this rather than instinct. A term for one doughnut placed where the offeree cannot read it before accepting is a textbook case for the procedural half — not ascertainable on review — and the sliding scale means the one-sidedness that follows from trading a soul for a doughnut does the rest.',
+    url: 'https://www.courtlistener.com/opinion/2623589/dr-horton-inc-v-green/',
+    treatment: 'Neutral',
+    verified: true,
+  },
+  {
     id: 'friendly-irishman',
     cite: 'Friendly Irishman, Inc. v. Ronnow, 330 P.2d 497 (Nev. 1958)',
     court: 'Nev.',
@@ -141,4 +161,4 @@ export const AUTHORITIES: Authority[] = [
 ]
 
 export const RESEARCH_NOTE =
-  'Retrieved from Midpage and confirmed against the opinion text before being written down. The citations, quotes, and holdings are real law; the matter they are applied to is not.'
+  'Retrieved from Midpage or CourtListener and confirmed against the opinion text before being written down. The citations, quotes, and holdings are real law; the matter they are applied to is not.'

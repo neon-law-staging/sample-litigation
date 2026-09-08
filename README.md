@@ -191,9 +191,9 @@ src/trialPrep.ts            the prep cards, the ground rules, and the mock exami
 src/documents.ts            the rendered PDFs and the templates behind them
 src/motion.ts               the motion, and the limitations arithmetic it derives rather than states
 src/mount.ts                links derived from the base rather than written out
-notations/neon_law/*.md     notation templates; the source of four of the PDFs
+notations/neon_law/*.md     notation templates; the source of five of the PDFs
 pleadings/pleading-paper.typ the 28-line grid, the rules, and the caption box
-pleadings/*.typ             Typst pleadings; the source of the fourth PDF
+pleadings/*.typ             Typst pleadings; the source of the sixth PDF
 scripts/render-documents.sh `navigator template render`, once per template
 scripts/render-pleadings.sh `typst compile`, once per pleading
 ```
@@ -220,8 +220,8 @@ app that ignores the theme.
 
 ### Documents
 
-No PDF under `public/documents/` is hand-authored, and there are two renderers rather than one. Four of the five are
-rendered by `navigator notations render` from a notation template in `notations/neon_law/`; the fifth is the motion,
+No PDF under `public/documents/` is hand-authored, and there are two renderers rather than one. Five of the six are
+rendered by `navigator notations render` from a notation template in `notations/neon_law/`; the sixth is the motion,
 compiled from Typst, and *The motion is typeset, not templated* below is why it is not a notation template like the
 others.
 
@@ -229,16 +229,17 @@ The notation ones come from Markdown carrying a questionnaire and a workflow in 
 against the same rule set as `navigator validate` and refuses a template with any violation, so a PDF that exists is a
 template that passed.
 
-There are four: the summons that opened the trespass count already before the Eighth Judicial District Court, the
-engagement letter that opens the representation, the notice of rescission served on the defendant, and the affidavit of
-the witness whose notebook the count turns on. The engagement letter is the one that declares a **render profile** —
-`output: letter` in its frontmatter — so it arrives on Neon Law letterhead while the other three render as plain pages.
-That key is the one place a template says what the finished document should look like, which is why
-`MatterDocument.format` carries it to the card rather than letting the component guess from the title.
+There are five: the summons that opened the trespass count already before the Eighth Judicial District Court, the
+engagement letter that opens the representation, the notice of rescission served on the defendant, the affidavit of the
+witness whose notebook the count turns on, and the answer to Prine's counterclaim that Count II drew in return. The
+engagement letter is the one that declares a **render profile** — `output: letter` in its frontmatter — so it arrives on
+Neon Law letterhead while the other four render as plain pages. That key is the one place a template says what the
+finished document should look like, which is why `MatterDocument.format` carries it to the card rather than letting the
+component guess from the title.
 
 They are **committed rather than generated during `vite build`**: this bundle has to build on a machine that has never
 installed the Navigator CLI, and CI should not need a Rust toolchain to ship a React app. Re-run `pnpm render:documents`
-whenever a template changes. `src/test/bundle.test.ts` asserts all five PDFs reach `dist/`, since nothing in the Vite
+whenever a template changes. `src/test/bundle.test.ts` asserts all six PDFs reach `dist/`, since nothing in the Vite
 build would notice them going missing.
 
 `pnpm validate:templates` is the check that keeps the templates renderable, and for the same reason it is **not in CI**
@@ -297,10 +298,13 @@ template's frontmatter. A contributor who has not been told that reads every fil
 
 ### The authorities are real
 
-Everything about the matter is invented. The citations on the research tab are not: each was retrieved from Midpage and
-checked against the opinion or statute text before it was written down, and every quote in `src/research.ts` is
-verbatim. `Authority.verified` exists in the type so the page can say so on the face of each card — a demo that blurs
-real law into fixture data teaches a reader to trust a citation because it looked like one.
+Everything about the matter is invented. The citations on the research tab are not: each was retrieved from Midpage or
+CourtListener and checked against the opinion or statute text before it was written down, and every quote in
+`src/research.ts` is verbatim. `Authority.verified` exists in the type so the page can say so on the face of each card —
+a demo that blurs real law into fixture data teaches a reader to trust a citation because it looked like one. The card's
+"Read it on Midpage" / "Read it on CourtListener" label is derived from the authority's own URL rather than hardcoded,
+since `dr-horton` came from CourtListener while the rest came from Midpage — a wrong label would be exactly the kind of
+thing this section warns against.
 
 ### Discovery is two voices, not one
 
@@ -402,7 +406,7 @@ profile in this repository would be inventing it in the wrong repository, becaus
 So the split is by tool, and `scripts/render-pleadings.sh` is separate from `scripts/render-documents.sh` for the same
 reason: that one needs the Navigator CLI and a Rust toolchain, this one needs `typst` and nothing else. A contributor
 who edits the motion does not have to install Navigator to re-render it. Both outputs are committed rather than built by
-Vite, and `src/test/bundle.test.ts` asserts the motion reaches `dist/` separately from the four notation PDFs — nothing
+Vite, and `src/test/bundle.test.ts` asserts the motion reaches `dist/` separately from the five notation PDFs — nothing
 in `vite build` knows Typst exists, so nothing in `vite build` would notice it going missing.
 
 `pnpm validate:templates` runs `navigator validate notations` over the whole of `notations/`, which is why `pleadings/`

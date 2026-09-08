@@ -791,6 +791,18 @@ const ISSUE_LABEL: Record<Authority['issue'], string> = {
   limitations: 'Limitations — has the clock run?',
 }
 
+/**
+ * Every authority links to the case-law aggregator it was actually retrieved
+ * and verified from. Most of these came from Midpage; `dr-horton` came from
+ * CourtListener instead, because that was the tool with the corpus reachable
+ * at the time — deriving the label from the URL keeps the card honest about
+ * which one, rather than a blanket "Midpage" the button would then be wrong
+ * about for that one card.
+ */
+function sourceLabel(url: string): string {
+  return url.includes('courtlistener.com') ? 'CourtListener' : 'Midpage'
+}
+
 function ResearchTab() {
   const [issue, setIssue] = useState<Authority['issue'] | 'all'>('all')
   const shown = AUTHORITIES.filter((a) => issue === 'all' || a.issue === issue)
@@ -823,8 +835,8 @@ function ResearchTab() {
             <AlertTitle>These citations are real</AlertTitle>
             <AlertDescription>
               Everything else in this portal is invented. The {AUTHORITIES.length} authorities below
-              are not: each was retrieved from Midpage and checked against the opinion or statute
-              text before it was written down, and each quote is verbatim.
+              are not: each was retrieved from Midpage or CourtListener and checked against the
+              opinion or statute text before it was written down, and each quote is verbatim.
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -861,7 +873,7 @@ function ResearchTab() {
             <CardFooter>
               <Button asChild variant="outline" size="sm">
                 <a href={authority.url} target="_blank" rel="noreferrer noopener">
-                  Read it on Midpage <ExternalLink />
+                  Read it on {sourceLabel(authority.url)} <ExternalLink />
                 </a>
               </Button>
             </CardFooter>
@@ -880,7 +892,7 @@ function ResearchTab() {
  * Every PDF here is produced by `navigator notations render` from a notation
  * template in `notations/neon_law/`, which is why each card names the template
  * and its code: the provenance is the point. `pnpm render:documents`
- * regenerates all four.
+ * regenerates all five.
  *
  * This is the one area built on navigator-ux rather than the shadcn components
  * the rest of the portal uses — `Panel`, `DownloadCard`, and `Callout` come
