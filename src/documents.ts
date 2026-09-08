@@ -4,7 +4,7 @@
 /**
  * The documents in the matter.
  *
- * All three PDFs are real files produced by `navigator template render` from
+ * All four PDFs are real files produced by `navigator notations render` from
  * the notation templates in `notations/neon_law/`, and `pnpm render:documents`
  * regenerates them. Nothing here is hand-authored PDF: if the prose in a
  * document is wrong, the template is wrong, and the fix is upstream of this
@@ -65,9 +65,11 @@ export interface MatterDocument {
 }
 
 /*
- * In date order, which is also the order they matter in: the engagement letter
- * is the document that makes the other two possible, and it is the one open
- * when the tab is reached.
+ * The engagement letter leads regardless of date, because it is the document
+ * that makes the representation possible and it is the one open when the tab
+ * is reached. Every other document follows in date order — including the
+ * summons, which predates the engagement letter entirely: it is the filing
+ * behind the count the letter calls a court action "already on file."
  */
 export const DOCUMENTS: MatterDocument[] = [
   {
@@ -83,6 +85,20 @@ export const DOCUMENTS: MatterDocument[] = [
     pages: 4,
     why: 'The engagement itself — signed five days after Dermot learned of the soul term, and the reason a document dated 2 May can say "through counsel". It is also where the matter is committed to arbitration rather than to a jury: the recorded covenants for the street require these neighbors to arbitrate before either of them may try a claim of this kind.',
     status: 'signed',
+  },
+  {
+    id: 'summons',
+    title: 'Summons',
+    kind: 'Summons',
+    path: 'documents/summons-wendell-prine.pdf',
+    template: 'notations/neon_law/nevada_summons.md',
+    code: 'summons__nevada',
+    format: 'plain',
+    date: '2026-02-06',
+    dateLabel: '6 February 2026',
+    pages: 1,
+    why: 'The trespass count already before the Eighth Judicial District Court, and the document that put Wendell Prine on notice of it. It predates the engagement letter, which is why that letter can call the court action one "already on file" rather than one the Firm opened.',
+    status: 'served',
   },
   {
     id: 'notice',

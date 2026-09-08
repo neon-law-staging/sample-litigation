@@ -877,10 +877,10 @@ function ResearchTab() {
 /**
  * The documents tab.
  *
- * Every PDF here is produced by `navigator template render` from a notation
+ * Every PDF here is produced by `navigator notations render` from a notation
  * template in `notations/neon_law/`, which is why each card names the template
  * and its code: the provenance is the point. `pnpm render:documents`
- * regenerates all three.
+ * regenerates all four.
  *
  * This is the one area built on navigator-ux rather than the shadcn components
  * the rest of the portal uses — `Panel`, `DownloadCard`, and `Callout` come
