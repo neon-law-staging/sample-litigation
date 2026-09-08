@@ -13,9 +13,13 @@
 #
 #   pnpm render:documents
 #
-# `navigator template render` validates against the same notation rule set as
+# `navigator notations render` validates against the same notation rule set as
 # `navigator validate` and refuses a template carrying any violation, so a PDF
 # that appears is a template that passed.
+#
+# The subcommand is `notations render`, not `template render` — the Navigator
+# CLI renamed it, and `brew upgrade` tracks that rename automatically since
+# this script always runs against whatever the tap currently installs.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -26,6 +30,7 @@ mkdir -p public/documents
 CLIENT="Dermot A. Cruller"
 ADVERSE="Wendell Prine"
 LAWYER="Lawrence Lawyer"
+ISSUANCE="6 February 2026"
 OFFER="1 April 2025"
 COMPLETION="14 April 2026"
 DISCOVERY="15 April 2026"
@@ -38,7 +43,12 @@ trespass to land, and rescission of the alleged instrument conveying the \
 client's soul — and in the Eighth Judicial District Court action already on \
 file to the extent any claim remains before that court."
 
-navigator template render notations/neon_law/nevada.md \
+navigator notations render notations/neon_law/nevada_summons.md \
+  --out public/documents/summons-wendell-prine.pdf \
+  --answer person__client="$CLIENT" \
+  --answer custom_datetime__issuance_date="$ISSUANCE"
+
+navigator notations render notations/neon_law/nevada.md \
   --out public/documents/notice-of-rescission.pdf \
   --answer person__client="$CLIENT" \
   --answer custom_datetime__offer_date="$OFFER" \
@@ -46,7 +56,7 @@ navigator template render notations/neon_law/nevada.md \
   --answer custom_datetime__discovery_date="$DISCOVERY" \
   --answer custom_datetime__notice_date="$NOTICE"
 
-navigator template render notations/neon_law/nevada_engagement_letter.md \
+navigator notations render notations/neon_law/nevada_engagement_letter.md \
   --out public/documents/engagement-letter-dermot-cruller.pdf \
   --answer person__client="$CLIENT" \
   --answer person__adverse_party="$ADVERSE" \
@@ -56,7 +66,7 @@ navigator template render notations/neon_law/nevada_engagement_letter.md \
   --answer custom_single_choice__arbitration_forum="$FORUM" \
   --answer custom_single_choice__governing_law="Nevada"
 
-navigator template render notations/neon_law/nevada_affidavit.md \
+navigator notations render notations/neon_law/nevada_affidavit.md \
   --out public/documents/affidavit-odile-cruller.pdf \
   --answer person__client="$CLIENT" \
   --answer custom_datetime__offer_date="$OFFER" \

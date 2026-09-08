@@ -71,6 +71,20 @@ export interface MatterDocument {
  */
 export const DOCUMENTS: MatterDocument[] = [
   {
+    id: 'summons',
+    title: 'Summons',
+    kind: 'Summons',
+    path: 'documents/summons-wendell-prine.pdf',
+    template: 'notations/neon_law/nevada_summons.md',
+    code: 'summons__nevada',
+    format: 'plain',
+    date: '2026-02-06',
+    dateLabel: '6 February 2026',
+    pages: 1,
+    why: 'The trespass count already before the Eighth Judicial District Court, and the document that put Wendell Prine on notice of it. It predates the engagement letter, which is why that letter can call the court action one "already on file" rather than one the Firm opened.',
+    status: 'served',
+  },
+  {
     id: 'engagement',
     title: 'Engagement Letter',
     kind: 'Engagement letter',

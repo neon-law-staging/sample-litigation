@@ -191,7 +191,7 @@ src/trialPrep.ts            the prep cards, the ground rules, and the mock exami
 src/documents.ts            the rendered PDFs and the templates behind them
 src/motion.ts               the motion, and the limitations arithmetic it derives rather than states
 src/mount.ts                links derived from the base rather than written out
-notations/neon_law/*.md     notation templates; the source of three of the PDFs
+notations/neon_law/*.md     notation templates; the source of four of the PDFs
 pleadings/pleading-paper.typ the 28-line grid, the rules, and the caption box
 pleadings/*.typ             Typst pleadings; the source of the fourth PDF
 scripts/render-documents.sh `navigator template render`, once per template
@@ -220,8 +220,8 @@ app that ignores the theme.
 
 ### Documents
 
-No PDF under `public/documents/` is hand-authored, and there are two renderers rather than one. Three of the four are
-rendered by `navigator template render` from a notation template in `notations/neon_law/`; the fourth is the motion,
+No PDF under `public/documents/` is hand-authored, and there are two renderers rather than one. Four of the five are
+rendered by `navigator notations render` from a notation template in `notations/neon_law/`; the fifth is the motion,
 compiled from Typst, and *The motion is typeset, not templated* below is why it is not a notation template like the
 others.
 
@@ -229,15 +229,16 @@ The notation ones come from Markdown carrying a questionnaire and a workflow in 
 against the same rule set as `navigator validate` and refuses a template with any violation, so a PDF that exists is a
 template that passed.
 
-There are three: the engagement letter that opens the representation, the notice of rescission served on the defendant,
-and the affidavit of the witness whose notebook the count turns on. The engagement letter is the one that declares a
-**render profile** — `output: letter` in its frontmatter — so it arrives on Neon Law letterhead while the other two
-render as plain pages. That key is the one place a template says what the finished document should look like, which is
-why `MatterDocument.format` carries it to the card rather than letting the component guess from the title.
+There are four: the summons that opened the trespass count already before the Eighth Judicial District Court, the
+engagement letter that opens the representation, the notice of rescission served on the defendant, and the affidavit of
+the witness whose notebook the count turns on. The engagement letter is the one that declares a **render profile** —
+`output: letter` in its frontmatter — so it arrives on Neon Law letterhead while the other three render as plain pages.
+That key is the one place a template says what the finished document should look like, which is why
+`MatterDocument.format` carries it to the card rather than letting the component guess from the title.
 
 They are **committed rather than generated during `vite build`**: this bundle has to build on a machine that has never
 installed the Navigator CLI, and CI should not need a Rust toolchain to ship a React app. Re-run `pnpm render:documents`
-whenever a template changes. `src/test/bundle.test.ts` asserts all four PDFs reach `dist/`, since nothing in the Vite
+whenever a template changes. `src/test/bundle.test.ts` asserts all five PDFs reach `dist/`, since nothing in the Vite
 build would notice them going missing.
 
 `pnpm validate:templates` is the check that keeps the templates renderable, and for the same reason it is **not in CI**
@@ -401,7 +402,7 @@ profile in this repository would be inventing it in the wrong repository, becaus
 So the split is by tool, and `scripts/render-pleadings.sh` is separate from `scripts/render-documents.sh` for the same
 reason: that one needs the Navigator CLI and a Rust toolchain, this one needs `typst` and nothing else. A contributor
 who edits the motion does not have to install Navigator to re-render it. Both outputs are committed rather than built by
-Vite, and `src/test/bundle.test.ts` asserts the motion reaches `dist/` separately from the three notation PDFs — nothing
+Vite, and `src/test/bundle.test.ts` asserts the motion reaches `dist/` separately from the four notation PDFs — nothing
 in `vite build` knows Typst exists, so nothing in `vite build` would notice it going missing.
 
 `pnpm validate:templates` runs `navigator validate notations` over the whole of `notations/`, which is why `pleadings/`

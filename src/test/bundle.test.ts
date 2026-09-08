@@ -98,6 +98,7 @@ describe('the built bundle', () => {
     expect(names, BUILD_FIRST).toContain('engagement-letter-dermot-cruller.pdf')
     expect(names).toContain('notice-of-rescission.pdf')
     expect(names).toContain('affidavit-odile-cruller.pdf')
+    expect(names).toContain('summons-wendell-prine.pdf')
   })
 
   it('ships the Typst pleading', () => {
