@@ -232,10 +232,10 @@ template that passed.
 There are five: the summons that opened the trespass count already before the Eighth Judicial District Court, the
 engagement letter that opens the representation, the notice of rescission served on the defendant, the affidavit of the
 witness whose notebook the count turns on, and the answer to Prine's counterclaim that Count II drew in return. The
-engagement letter is the one that declares a **render profile** — `output: letter` in its frontmatter — so it arrives
-on Neon Law letterhead while the other four render as plain pages. That key is the one place a template says what the
-finished document should look like, which is why `MatterDocument.format` carries it to the card rather than letting
-the component guess from the title.
+engagement letter is the one that declares a **render profile** — `output: letter` in its frontmatter — so it arrives on
+Neon Law letterhead while the other four render as plain pages. That key is the one place a template says what the
+finished document should look like, which is why `MatterDocument.format` carries it to the card rather than letting the
+component guess from the title.
 
 They are **committed rather than generated during `vite build`**: this bundle has to build on a machine that has never
 installed the Navigator CLI, and CI should not need a Rust toolchain to ship a React app. Re-run `pnpm render:documents`
@@ -300,11 +300,11 @@ template's frontmatter. A contributor who has not been told that reads every fil
 
 Everything about the matter is invented. The citations on the research tab are not: each was retrieved from Midpage or
 CourtListener and checked against the opinion or statute text before it was written down, and every quote in
-`src/research.ts` is verbatim. `Authority.verified` exists in the type so the page can say so on the face of each
-card — a demo that blurs real law into fixture data teaches a reader to trust a citation because it looked like one.
-The card's "Read it on Midpage" / "Read it on CourtListener" label is derived from the authority's own URL rather than
-hardcoded, since `dr-horton` came from CourtListener while the rest came from Midpage — a wrong label would be exactly
-the kind of thing this section warns against.
+`src/research.ts` is verbatim. `Authority.verified` exists in the type so the page can say so on the face of each card —
+a demo that blurs real law into fixture data teaches a reader to trust a citation because it looked like one. The card's
+"Read it on Midpage" / "Read it on CourtListener" label is derived from the authority's own URL rather than hardcoded,
+since `dr-horton` came from CourtListener while the rest came from Midpage — a wrong label would be exactly the kind of
+thing this section warns against.
 
 ### Discovery is two voices, not one
 
