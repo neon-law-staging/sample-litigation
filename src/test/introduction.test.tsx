@@ -192,10 +192,13 @@ describe('the introduction to Count II', () => {
       expect(screen.getByText(authority.cite)).toBeInTheDocument()
     }
 
-    const midpageLinks = screen
+    const sourceLinks = screen
       .getAllByRole('link')
-      .filter((link) => link.getAttribute('href')?.includes('midpage.ai'))
-    expect(midpageLinks.length).toBe(AUTHORITIES.length)
+      .filter((link) => {
+        const href = link.getAttribute('href') ?? ''
+        return href.includes('midpage.ai') || href.includes('courtlistener.com')
+      })
+    expect(sourceLinks.length).toBe(AUTHORITIES.length)
   })
 
   it('scrubs the doughnut through its three states', async () => {

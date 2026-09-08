@@ -4,7 +4,7 @@
 /**
  * The documents in the matter.
  *
- * All four PDFs are real files produced by `navigator notations render` from
+ * All five PDFs are real files produced by `navigator notations render` from
  * the notation templates in `notations/neon_law/`, and `pnpm render:documents`
  * regenerates them. Nothing here is hand-authored PDF: if the prose in a
  * document is wrong, the template is wrong, and the fix is upstream of this
@@ -127,5 +127,19 @@ export const DOCUMENTS: MatterDocument[] = [
     pages: 1,
     why: 'The contemporaneous notebook, sworn to. It is the only evidence bearing directly on what Dermot knew on 14 April 2026 — the fact the entire count turns on.',
     status: 'draft',
+  },
+  {
+    id: 'answer',
+    title: 'Answer to Counterclaim',
+    kind: 'Answer',
+    path: 'documents/answer-to-counterclaim-dermot-cruller.pdf',
+    template: 'notations/neon_law/nevada_answer_to_counterclaim.md',
+    code: 'answer_to_counterclaim__nevada',
+    format: 'plain',
+    date: '2026-08-31',
+    dateLabel: '31 August 2026',
+    pages: 2,
+    why: 'Prine’s answer to Count II came with a counterclaim of his own — that the doughnut was a binding conveyance and Dermot breached it. This is Dermot’s answer to that counterclaim, and the affirmative defenses on its face are the same ones the notice of rescission pleads, this time aimed at a claim rather than at rescinding one.',
+    status: 'served',
   },
 ]

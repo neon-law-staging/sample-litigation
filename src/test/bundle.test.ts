@@ -99,6 +99,7 @@ describe('the built bundle', () => {
     expect(names).toContain('notice-of-rescission.pdf')
     expect(names).toContain('affidavit-odile-cruller.pdf')
     expect(names).toContain('summons-wendell-prine.pdf')
+    expect(names).toContain('answer-to-counterclaim-dermot-cruller.pdf')
   })
 
   it('ships the Typst pleading', () => {
