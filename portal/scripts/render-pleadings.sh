@@ -9,10 +9,10 @@
 #
 # This is the sibling of `render-documents.sh`, and the two are separate scripts
 # because they need different tools. That one needs the Navigator CLI, which
-# renders notation templates and brings a Rust toolchain with it; this one needs
-# `typst` and nothing else. Keeping them apart means a contributor who edits the
-# motion can re-render it without installing Navigator, and a contributor who
-# edits a notation template does not need Typst on their machine.
+# renders notation templates; this one needs `typst` and nothing else. Keeping
+# them apart means a contributor who edits the motion re-renders only the
+# motion. Both run as `postbuild`, and both take what they need from
+# `scripts/toolchain.sh` when it is not already installed.
 #
 # Why the pleadings are not notation templates
 # --------------------------------------------
@@ -25,28 +25,32 @@
 # wrong repository — the profiles are Navigator's.
 #
 # So the pleadings are Typst source, held in `pleadings/`, and this script is the
-# whole of the build. They are **committed rather than generated during
-# `vite build`**, for the same reason the notation documents are: the bundle has
-# to build on a machine that has never installed Typst, and CI should not need a
-# typesetter to ship a React app. Re-run this whenever a `.typ` file changes.
+# whole of the build. The PDF it produces is **generated during the build rather
+# than committed**: the repository gate refuses a rendered PDF anywhere in this
+# tree except `dist/`, which is also the only directory `vite build` owns. Run
+# this whenever a `.typ` file changes, or just run `pnpm build`.
 #
-# `pleadings/` is a top-level directory rather than `templates/typst/` because
-# `pnpm validate:templates` runs `navigator validate notations` over the whole of
-# `templates/`, and a `.typ` file in there is a file the notation rule set has an
+# `pleadings/` is a top-level directory of the application rather than
+# `templates/typst/` because a Project's `templates/` is flat and holds notation
+# blueprints — a `.typ` file in there is a file the notation rule set has an
 # opinion about and should not.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
-mkdir -p public/documents
+# shellcheck source=portal/scripts/toolchain.sh
+. "$(dirname "$0")/toolchain.sh"
+
+ensure_typst
+mkdir -p dist/documents
 
 # The typeface is Typst's own bundled Libertinus Serif, named in
 # `pleadings/pleading-paper.typ` rather than passed here. That is deliberate: a
 # system font would render differently on the next contributor's machine, and a
-# committed PDF that changes when somebody else rebuilds it is a committed PDF
-# nobody can review.
+# document that changes when somebody else rebuilds it is a document nobody can
+# review. `scripts/toolchain.sh` pins the compiler for the same reason.
 typst compile \
   --root . \
   pleadings/motion-summary-judgment.typ \
-  public/documents/motion-for-summary-judgment.pdf
+  dist/documents/motion-for-summary-judgment.pdf
 
-echo "rendered $(ls -1 pleadings/*.typ | grep -cv 'pleading-paper.typ') pleading(s) to public/documents/"
+echo "rendered $(ls -1 pleadings/*.typ | grep -cv 'pleading-paper.typ') pleading(s) to dist/documents/"

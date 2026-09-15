@@ -27,9 +27,9 @@ bearer-shareable and would not carry the session.
 That has three consequences for this app:
 
 1. **Vite `base` is baked at build time** and must be `/app/projects/sample-litigation/portal/`. A bundle built with the
-   wrong base 404s on every asset. It is one named constant at the top of `vite.config.ts`.
-2. **Never hardcode a mount-absolute link.** Write links relative to the base, or derive them — `src/mount.ts` is the
-   whole of that job here, and `portalPath()` is what every in-bundle link goes through. Hardcoded
+   wrong base 404s on every asset. It is one named constant at the top of `portal/vite.config.ts`.
+2. **Never hardcode a mount-absolute link.** Write links relative to the base, or derive them —
+   `portal/src/mount.ts` is the whole of that job here, and `portalPath()` is what every in-bundle link uses. Hardcoded
    `/sample-litigation/...` strings are the single most common way one of these bundles breaks under its real mount.
    Links to Navigator's *own* routes (`/app/projects`) stay absolute, because they are Navigator's paths rather than
    paths inside this bundle.
@@ -47,13 +47,12 @@ vibe-coded prototype reaches for by default:
 
 - **No `cdn.tailwindcss.com`.** Tailwind is compiled into the hashed CSS asset by `@tailwindcss/vite`. A CDN script tag
   works on the dev server and is blocked in production — the worst possible place to find out — so
-  `src/test/bundle.test.ts` asserts the built output loads nothing from a CDN.
+  `portal/src/test/bundle.test.ts` asserts the built output loads nothing from a CDN.
 - **No webfont *request*.** There are two webfonts — Source Serif 4, vendored by navigator-ux under the OFL — and the
   build emits both as hashed assets under the mount, so `font-src 'self'` covers them. A font served from a CDN would be
   blocked here, and in an authenticated portal it would also be a third party watching every page of a matter.
-- **No remote images.** The illustrations in `src/art.tsx` are original inline SVG, themed off the same variables as
-  everything else. Hotlinking artwork would be the only thing in the bundle that could fail because of somebody else's
-  server — and it would be somebody else's artwork.
+- **No remote images.** The illustrations in `portal/src/art.tsx` are original inline SVG.
+  They use the same variables as everything else. Hotlinking art could fail when another server does.
 
 ## The one contract Navigator depends on
 
@@ -69,11 +68,17 @@ drives a real browser and waits on a CSS locator, so what it sees is the live DO
 
 The built `index.html` also carries `<meta name="navigator-ready-hook" content="sample-litigation-portal-ready">`, so a
 check that reads the published document rather than driving a browser still finds the contract it is looking for. Both
-are asserted by `src/test/bundle.test.ts`, against what `pnpm build` actually emitted.
+are asserted by `portal/src/test/bundle.test.ts`, against what `pnpm build` actually emitted.
 
 ## Run it locally
 
-Node >= 22 and pnpm 11 (`packageManager` pins the exact version). Two commands, from a clean clone:
+Node >= 22 and pnpm 11. The Vite workspace is `portal/`; run its commands there:
+
+```bash
+cd portal
+```
+
+Then install and start it:
 
 ```bash
 pnpm install
@@ -139,9 +144,8 @@ with production about where the app lives is a dev loop that hides base bugs.
 
 [navigator-ux's GitHub Release](https://github.com/neon-law-source-code/navigator-ux/releases) is where the library
 comes from: it is not published to npm at all, and that is why `pnpm install` needs no registry account, no token, and
-no `.npmrc`. The URL in `package.json` pins one exact version, so upgrading is an edit to that URL rather than a range
-that widens on its own, and `pnpm-lock.yaml` records the tarball's sha512 — a clean clone resolves the same bytes rather
-than whatever the URL serves that day.
+no `.npmrc`. The URL in `portal/package.json` pins one exact version, so upgrading changes that URL rather than a range.
+`portal/pnpm-lock.yaml` records the tarball's sha512, so a clean clone resolves the same bytes each time.
 
 | Command | What it does |
 | --- | --- |
@@ -151,9 +155,9 @@ than whatever the URL serves that day.
 | `pnpm typecheck` | `tsc --noEmit` on its own. |
 | `pnpm test` | vitest. **Needs a build first** — the bundle gate asserts on real output rather than skipping. |
 | `pnpm check` | lint, typecheck, build, test, in that order. |
-| `pnpm validate:templates` | `navigator validate notations` — the notation rule set, over `notations/`. |
-| `pnpm render:documents` | Re-render each notation template to `public/documents/`. Needs the Navigator CLI. |
-| `pnpm render:pleadings` | Re-compile each Typst pleading to `public/documents/`. Needs `typst`, and nothing else. |
+| `pnpm validate:templates` | Validates `../templates` with Navigator's notation rules. |
+| `pnpm render:documents` | Re-render each catalog notation to `portal/dist/documents/`. Runs as `postbuild`. |
+| `pnpm render:pleadings` | Re-compiles Typst pleadings to `portal/dist/documents/`. Runs as `postbuild`. |
 
 Navigator builds this repository the same way. `navigator dev sample-project` clones it into a temporary directory, runs
 `pnpm install --frozen-lockfile` and `pnpm build`, and stages the resulting `dist/` under `.devx/sample-project/dist`;
@@ -162,49 +166,48 @@ the next `web` boot publishes every file in it to the applications bucket, entry
 ## What it is made of
 
 ```text
-index.html                  the Vite template — no inline script, ever
-src/main.tsx                the entry: the stylesheet, imported once, and the mount
-src/index.css               Tailwind, plus the theme every component reads, aliased from navigator-ux
-src/App.tsx                 the shell, the fragment router, and the overview
-src/IntroductionPage.tsx    Count II — eight tabs
-src/DiscoveryPage.tsx       the interrogatories and the responses, split by who signed them
-src/ResponsesPage.tsx       the set served on us, and the drafts waiting to be sworn
-src/TrialPrepPage.tsx       the flashcard deck, and the simulated cross-examination
-src/MotionPage.tsx          the motion: the limitations arithmetic, and what it does not ask for
-src/CaseLibraryPage.tsx     real citations that are not Count II authorities
-src/RelationshipGraph.tsx   the force-directed party/evidence web
-src/PdfViewer.tsx           the document viewer: canvas, text layer, find bar
-src/pdf.ts                  the pdf.js seam — worker wiring, opening, text extraction
-src/art.tsx                 original inline SVG illustrations
-src/inline.tsx              two marks of inline Markdown, for prose held as data
-src/components/ui/*         shadcn-style components, owned here
-src/lib/utils.ts            `cn()` — clsx plus tailwind-merge
-src/matter.ts               the fixture data for the trespass count
-src/soulContract.ts         the fixture data for Count II, including the graph
-src/people.ts               who may read the matter, and who the matter is about
-src/glossary.ts             Navigator's vocabulary, scoped to this bundle
-src/research.ts             the authorities — real law, verified before it was written down
-src/caseLibrary.ts          real citations outside Count II's scope — not fixture, not authority
-src/discovery.ts            the interrogatory exchange, and the rules it is measured against
-src/responses.ts            the set served on us, the drafts under it, and the derived deadline
-src/trialPrep.ts            the prep cards, the ground rules, and the mock examination
-src/documents.ts            the rendered PDFs and the templates behind them
-src/motion.ts               the motion, and the limitations arithmetic it derives rather than states
-src/mount.ts                links derived from the base rather than written out
-notations/neon_law/*.md     notation templates; the source of five of the PDFs
-pleadings/pleading-paper.typ the 28-line grid, the rules, and the caption box
-pleadings/*.typ             Typst pleadings; the source of the sixth PDF
-scripts/render-documents.sh `navigator template render`, once per template
-scripts/render-pleadings.sh `typst compile`, once per pleading
+portal/index.html           the Vite template — no inline script, ever
+portal/src/main.tsx                the entry: the stylesheet, imported once, and the mount
+portal/src/index.css               Tailwind, plus the theme every component reads, aliased from navigator-ux
+portal/src/App.tsx                 the shell, the fragment router, and the overview
+portal/src/IntroductionPage.tsx    Count II — eight tabs
+portal/src/DiscoveryPage.tsx       the interrogatories and the responses, split by who signed them
+portal/src/ResponsesPage.tsx       the set served on us, and the drafts waiting to be sworn
+portal/src/TrialPrepPage.tsx       the flashcard deck, and the simulated cross-examination
+portal/src/MotionPage.tsx          the motion: the limitations arithmetic, and what it does not ask for
+portal/src/CaseLibraryPage.tsx     real citations that are not Count II authorities
+portal/src/RelationshipGraph.tsx   the force-directed party/evidence web
+portal/src/PdfViewer.tsx           the document viewer: canvas, text layer, find bar
+portal/src/pdf.ts                  the pdf.js seam — worker wiring, opening, text extraction
+portal/src/art.tsx                 original inline SVG illustrations
+portal/src/inline.tsx              two marks of inline Markdown, for prose held as data
+portal/src/components/ui/*         shadcn-style components, owned here
+portal/src/lib/utils.ts            `cn()` — clsx plus tailwind-merge
+portal/src/matter.ts               the fixture data for the trespass count
+portal/src/soulContract.ts         the fixture data for Count II, including the graph
+portal/src/people.ts               who may read the matter, and who the matter is about
+portal/src/glossary.ts             Navigator's vocabulary, scoped to this bundle
+portal/src/research.ts             the authorities — real law, verified before it was written down
+portal/src/caseLibrary.ts          real citations outside Count II's scope — not fixture, not authority
+portal/src/discovery.ts            the interrogatory exchange, and the rules it is measured against
+portal/src/responses.ts            the set served on us, the drafts under it, and the derived deadline
+portal/src/trialPrep.ts            the prep cards, the ground rules, and the mock examination
+portal/src/documents.ts            the rendered PDFs and the catalog codes behind them
+portal/src/motion.ts               the motion, and the limitations arithmetic it derives rather than states
+portal/src/mount.ts                links derived from the base rather than written out
+templates/*.md                     this matter's own notation blueprints, flat and project-coded
+portal/pleadings/pleading-paper.typ the 28-line grid, the rules, and the caption box
+portal/pleadings/*.typ             Typst pleadings; the source of the sixth PDF
+portal/scripts/render-documents.sh `navigator template render`, once per catalog template
+portal/scripts/render-pleadings.sh `typst compile`, once per pleading
+portal/scripts/toolchain.sh        fetches the pinned Navigator CLI and Typst when they are absent
 ```
 
 ### Styling
 
-Semantic CSS variables in `src/index.css`, with every component styled against the semantic name rather than a color.
-Nothing in `src/components/ui` names a hue, so the teal accent is that one file — and that file now names no hue either:
-each variable aliases the `--nav-*` token navigator-ux publishes for the same job, so the brand lives upstream and a
-re-toned release arrives on the next `pnpm install`. It is also what keeps the documents tab coherent, where library
-components render beside components from `src/components/ui`.
+Semantic CSS variables in `portal/src/index.css` name roles, not colors. The component source names no hue.
+
+The teal accent is defined through a navigator-ux token. It keeps the documents tab coherent.
 
 Dark mode comes with the tokens. navigator-ux redefines its own under `prefers-color-scheme: dark`, so an alias resolves
 to the dark value inside that query and this repository carries no second palette. There is no theme state to hold and
@@ -220,10 +223,15 @@ app that ignores the theme.
 
 ### Documents
 
-No PDF under `public/documents/` is hand-authored, and there are two renderers rather than one. Five of the six are
-rendered by `navigator notations render` from a notation template in `notations/neon_law/`; the sixth is the motion,
-compiled from Typst, and *The motion is typeset, not templated* below is why it is not a notation template like the
-others.
+No PDF under `portal/dist/documents/` is hand-authored.
+
+Five come from `navigator notations render`.
+
+Their notation templates are in Navigator's shared catalog, not here.
+
+The motion comes from Typst.
+
+*The motion is typeset, not templated* below is why it is not a notation template like the others.
 
 The notation ones come from Markdown carrying a questionnaire and a workflow in its frontmatter. The renderer validates
 against the same rule set as `navigator validate` and refuses a template with any violation, so a PDF that exists is a
@@ -237,37 +245,59 @@ Neon Law letterhead while the other four render as plain pages. That key is the 
 finished document should look like, which is why `MatterDocument.format` carries it to the card rather than letting the
 component guess from the title.
 
-They are **committed rather than generated during `vite build`**: this bundle has to build on a machine that has never
-installed the Navigator CLI, and CI should not need a Rust toolchain to ship a React app. Re-run `pnpm render:documents`
-whenever a template changes. `src/test/bundle.test.ts` asserts all six PDFs reach `dist/`, since nothing in the Vite
-build would notice them going missing.
+None of those five lives in this repository, and that is the second reversal worth knowing about. They are
+jurisdiction-wide Neon Law forms — `jurisdiction: NV`, titles like "Summons (Nevada)" — and they belong to Navigator's
+shared catalog under `templates/notations/neon_law/shared/`. This matter **references** each one by its `code`, which is
+the identity Navigator resolves: when no `templates/<code>.md` exists here, notation creation finds the workspace-shared
+row and pins that exact version, so provenance stays with the catalog. Carrying a copy would shadow the shared code and
+persist a matter-scoped version of global reference data, which is backwards — and a renamed code is a different
+template, not a refactor, because there is no alias and no migration path. So the codes in `portal/src/documents.ts` are
+fixed: `summons__nevada`, `rescission_notice__nevada`, `engagement_letter__nevada`, `witness_affidavit__nevada`, and
+`answer_to_counterclaim__nevada`. This repository's own flat `templates/` holds only blueprints that are genuinely
+specific to this matter.
 
-`pnpm validate:templates` is the check that keeps the templates renderable, and for the same reason it is **not in CI**
-— it needs the Navigator CLI, and a React build should not wait on a Rust toolchain. So run it locally whenever a
-template changes. The notation rule set is versioned in Navigator rather than here, which means a template can stop
-validating without anything in this repository changing: that is exactly what happened to the `staff_review` workflow
-state these templates used to carry, before `N106` began requiring the `lawyer_review` gate that every one of them now
-names.
+They are **generated during the build rather than committed**, which is a reversal of what this repository used to do
+and worth understanding before changing it. The repository gate refuses a rendered PDF anywhere in this tree except
+`dist/` — it follows the bytes rather than the path, so moving them elsewhere does not help — and `dist/` is the one
+directory `vite build` owns. So both render scripts run as `postbuild`, after Vite has emptied and refilled it, and
+`pnpm test` gets all six because it builds first. `portal/src/test/bundle.test.ts` asserts every one of them reaches
+`dist/`; Vite otherwise would not notice them going missing.
+
+That is also why `portal/scripts/toolchain.sh` exists. The reusable gate this repository is pinned to does install the
+Navigator CLI, but only after it has run `typecheck`, `test`, and `build`, and it never installs Typst at all — and a
+caller pinned to an immutable release tag cannot reorder that job. So the build fetches both tools itself, the CLI at
+the exact version `navigator.yaml` pins, and skips the download entirely when they are already on `PATH`. Nothing is
+written inside the checkout.
+
+`pnpm validate:templates` is the check that keeps this matter's own blueprints renderable; `navigator validate .` runs
+the whole rule set over the whole tree, and the gate's `notation` job runs it in CI on every pull request. The notation
+rule set is versioned in Navigator rather than here, which means a template can stop validating without anything in this
+repository changing: that is exactly what happened to the `staff_review` workflow state these templates used to carry,
+before `N106` began requiring the `lawyer_review` gate that every one of them now names.
 
 ### The viewer is ours
 
-The documents tab reads its PDFs in a viewer this repository owns — `src/PdfViewer.tsx` — rather than in the browser's
-built-in one or in the `PdfViewer` that navigator-ux ships. The library's is a leaf component by its own contract: it
-takes a `src` and a `label` and renders a page. That is the right shape for a library and the wrong one for this tab,
-where the viewer has to find a phrase across every page of a document, hold a zoom while the reader switches documents,
-and degrade to a plain link when it cannot start. Owning it means those behaviors are editable rather than wrapped.
+The documents tab uses this repository's `portal/src/PdfViewer.tsx`, not a browser or navigator-ux viewer.
+
+The library contract makes it a leaf component.
+
+It takes a `src` and a `label` and renders a page.
+
+That shape is right for a library but wrong for this tab. The viewer must find a phrase across every page, retain zoom
+while the reader switches documents, and degrade to a plain link when it cannot start. Owning it keeps those behaviors
+editable rather than wrapped.
 
 What it does not own is the parsing. `pdfjs-dist` does that, in a worker, and the component is the chrome around it:
 paint the page to a canvas, lay pdf.js's transparent text runs over it so the page can be selected and read aloud, and
 keep the two in step through every zoom and page turn. Three things about that are load- bearing enough to be worth
 knowing before editing it:
 
-- **The worker is same-origin, and hashed.** `src/pdf.ts` imports it with Vite's `?url` suffix, so the build emits it as
-  an asset under the mount. Left unset, pdf.js reaches for a CDN, `script-src 'self'` blocks it, and the reader gets a
-  spinner that never resolves — which is why `bundle.test.ts` asserts the emitted worker and the URL that reaches it.
+- **The worker is same-origin, and hashed.** `portal/src/pdf.ts` imports it with Vite's `?url` suffix.
+  The build emits it under the mount, avoiding the CSP-blocked CDN fallback that leaves a reader staring at a spinner.
+  `bundle.test.ts` asserts the emitted worker and the URL that reaches it.
 - **pdf.js is loaded on demand.** The import inside `loadPdfjs()` is dynamic, which splits the parser into its own
   chunk: a reader who never opens this tab never downloads it. It is nearly half the JavaScript in the build, so a
-  static import anywhere in `src/pdf.ts` would quietly cost every other page. That is a test too.
+  static import anywhere in `portal/src/pdf.ts` would quietly cost every other page. That is a test too.
 - **One paint per canvas.** pdf.js locks a canvas for the duration of a render and throws if a second starts on it, and
   it releases that lock when a cancelled render *settles* rather than when `cancel()` returns. So a new paint cancels
   its predecessor and then waits for it. Skip the wait and the symptom is not an error — it is a page that paints and
@@ -281,7 +311,7 @@ unmarked. Counting from the page text rather than from the runs is what keeps th
 
 Two data files answer questions the graph cannot.
 
-`src/people.ts` holds two rosters that look alike and mean entirely different things. One is the **Navigator Persons** —
+`portal/src/people.ts` holds two rosters that look alike and mean different things. One is the **Navigator Persons** —
 rows that can sign in, each with a system-wide tier and a participation row on this Project. The other is the **cast in
 the pleaded facts**, the Cruller and Prine households. Dermot Cruller is the plaintiff and has no account; Cleo Client
 has an account and is not the plaintiff. Keeping those two facts side by side is the point of the file: participation is
@@ -289,19 +319,22 @@ a property of a Person–Project Role row, a party is a fact in a pleading, and 
 first. The Navigator Persons are the five the development seed writes, spelled the way it spells them — including the
 Admin who deliberately gets no participation row and therefore cannot reach this matter at all.
 
-`src/glossary.ts` is the vocabulary, scoped. Navigator keeps **one** canonical glossary, in its own repository, and this
-file does not compete with it: each entry paraphrases what Navigator means by a word, says what that word is *here* —
-which file, which path, which fixture row — and links to the canonical definition, which governs if the two ever
-disagree. It exists because the same word means a pleading to a lawyer and a table to this codebase. Matter and Project
-are one row. Person is a login, not a party. Letter is a piece of mail in the schema and a render profile in a
-template's frontmatter. A contributor who has not been told that reads every file in this repository slightly wrong.
+`portal/src/glossary.ts` is the vocabulary, scoped. Navigator keeps **one** canonical glossary.
+
+This file paraphrases Navigator terms, identifies a local source, and links to the canonical definition. That definition
+governs when the two disagree.
+
+It exists because the same word can mean a pleading to a lawyer and a table to this codebase. Matter and Project are one
+row. Person is a login, not a party. Letter is a piece of mail in the schema and a render profile in a template's
+frontmatter. A contributor who has not been told that reads every file in this repository slightly wrong.
 
 ### The authorities are real
 
 Everything about the matter is invented. The citations on the research tab are not: each was retrieved from Midpage or
 CourtListener and checked against the opinion or statute text before it was written down, and every quote in
-`src/research.ts` is verbatim. `Authority.verified` exists in the type so the page can say so on the face of each card —
-a demo that blurs real law into fixture data teaches a reader to trust a citation because it looked like one. The card's
+`portal/src/research.ts` is verbatim. `Authority.verified` lets the page say so on the card.
+
+A demo that blurs real law into fixture data teaches a reader to trust a citation because it looked like one. The card's
 "Read it on Midpage" / "Read it on CourtListener" label is derived from the authority's own URL rather than hardcoded,
 since `dr-horton` came from CourtListener while the rest came from Midpage — a wrong label would be exactly the kind of
 thing this section warns against.
@@ -322,14 +355,14 @@ and then the part no response contains: what it leaves us with, and what we do n
 set is deficient for a reason quoted from the rule rather than asserted by us.
 
 The same line this repository draws for case law is drawn here. **The exchange is fixture and the rules are real**: the
-questions, answers, objections, dates, and opposing counsel are invented, and `Rule.verified` in `src/discovery.ts`
-marks the quotes that are not — verbatim from the Nevada Rules of Civil Procedure. Opposing counsel is invented
-deliberately. A sample matter that casts a real firm as the adversary in a simulated soul-conveyance dispute is a sample
-matter with a problem.
+questions, answers, objections, dates, and opposing counsel are invented. `Rule.verified` in `portal/src/discovery.ts`
+marks the verbatim Nevada Rules of Civil Procedure quotes. Opposing counsel is invented deliberately.
 
-`src/discovery.ts` checks its own story at import: a duplicated number, an answer filed under a response that claims to
-be objection-only, or an objection citing a rule the module does not carry all throw where a test sees them. Each of
-those renders perfectly well while being wrong, which is the failure mode worth a guard.
+A sample matter must not cast a real firm as the adversary in a simulated soul-conveyance dispute.
+
+`portal/src/discovery.ts` checks its own story at import. A duplicated number, an answer filed under a response that
+claims to be objection-only, or an objection citing a missing rule throws where a test sees it. Each renders perfectly
+well while being wrong, which is the failure mode worth a guard.
 
 ### Nothing on the interrogatories tab has been served
 
@@ -340,7 +373,7 @@ not. Nothing on that page has been served, and no answer on it is sworn until th
 block is labeled as a draft on its face rather than in a footnote. A client who reads a draft answer as a filed one has
 been misled by us, which is the same failure the two-voices layout on the discovery page exists to prevent.
 
-Three things about `src/responses.ts` are worth knowing before editing it:
+Three things about `portal/src/responses.ts` are worth knowing before editing it:
 
 - **The deadline is derived, not written down.** NRCP 33(b)(2) gives thirty days from service, and thirty days from the
   fixture's date of service lands on a Sunday — so the date the page prints is a Monday that appears nowhere in the
@@ -367,10 +400,10 @@ the client studies before he is deposed. It is written as cards rather than as a
 behavioral rather than cosmetic — **the answer side is not rendered until the reader turns the card over.** Not hidden
 with CSS: absent. A visually hidden answer is still one the eye catches, a screen reader announces, and a find-in-page
 lands on, and any of those turns a rehearsal back into a document the client reads once and believes he has practiced.
-`src/test/trial-prep.test.tsx` asserts the absence in both directions, because it is exactly the property a well-meaning
-redesign removes first.
+`portal/src/test/trial-prep.test.tsx` asserts the absence in both directions, because it is exactly the property a
+well-meaning redesign removes first.
 
-Three things about `src/trialPrep.ts`:
+Three things about `portal/src/trialPrep.ts`:
 
 - **A card that claims record support has to point at the record.** Every `anchor` names an interrogatory in
   `discovery.ts` or `responses.ts` by id, and the guard at the foot of the module throws at import if it names one that
@@ -394,7 +427,7 @@ than meet each question in isolation.
 ### The motion is typeset, not templated
 
 `#motion` is the matter's first court filing, and the only document here that is **not** a notation template. It is
-Typst source in `pleadings/`, compiled by `pnpm render:pleadings`, and the reason is pleading paper.
+Typst source in `portal/pleadings/`, compiled by `pnpm render:pleadings`, and the reason is pleading paper.
 
 Pleading paper is a typesetting problem before it is a drafting one: 28 numbered lines down the left margin, a double
 rule beside them, a single rule at the right, and body text whose every baseline has to land on one of the 28 numbers —
@@ -403,17 +436,18 @@ on every page, through every heading, and across a caption box. A notation templ
 from there. That is the right trade for a letter or an affidavit and the wrong one here, and inventing a `pleading`
 profile in this repository would be inventing it in the wrong repository, because the profiles are Navigator's.
 
-So the split is by tool, and `scripts/render-pleadings.sh` is separate from `scripts/render-documents.sh` for the same
-reason: that one needs the Navigator CLI and a Rust toolchain, this one needs `typst` and nothing else. A contributor
-who edits the motion does not have to install Navigator to re-render it. Both outputs are committed rather than built by
-Vite, and `src/test/bundle.test.ts` asserts the motion reaches `dist/` separately from the five notation PDFs — nothing
-in `vite build` knows Typst exists, so nothing in `vite build` would notice it going missing.
+So the split is by tool, and `portal/scripts/render-pleadings.sh` is separate from `portal/scripts/render-documents.sh`
+for the same reason: that one needs the Navigator CLI. This one needs `typst`. A contributor who edits the motion does
+not have to install Navigator to re-render it, and `portal/scripts/toolchain.sh` fetches whichever of the two is
+missing. Both outputs land in `dist/documents/` during `postbuild`, and `portal/src/test/bundle.test.ts` asserts the
+motion reaches `dist/` separately from the five notation PDFs. `vite build` does not know Typst exists, so it would not
+notice the file going missing.
 
-`pnpm validate:templates` runs `navigator validate notations` over the whole of `notations/`, which is why `pleadings/`
-is a top-level directory rather than `templates/typst/`: a `.typ` file in there is a file the notation rule set has an
-opinion about and should not.
+`pnpm validate:templates` runs `navigator validate ../templates` over this matter's own blueprints. That is why
+`portal/pleadings/` is a directory of the application rather than `templates/typst/`. A `.typ` file does not belong in
+notation validation.
 
-Three things about `pleadings/pleading-paper.typ`:
+Three things about `portal/pleadings/pleading-paper.typ`:
 
 - **One constant drives everything.** `LINE` is the baseline-to-baseline distance, and every vertical measurement in the
   file is a whole multiple of it. The numbers are placed on an absolute grid in the page background and the text is laid
@@ -432,7 +466,7 @@ differently on the next contributor's machine is a committed PDF nobody can revi
 
 ### The motion argues arithmetic, and the module checks it
 
-`src/motion.ts` is the one data module whose subject is a *calculation*, and it is written that way on purpose.
+`portal/src/motion.ts` is the one data module whose subject is a *calculation*, and it is written that way on purpose.
 
 The motion is aimed at the statute of limitations defense and at nothing else. NRS 11.190(3)(d) gives three years; Count
 II was filed sixteen months after the earliest date any theory can start the clock; so the defense fails on every
@@ -458,7 +492,7 @@ Two more things worth knowing before editing it:
   are the rule's own words, and the two sentences from *Wood v. Safeway* were checked against the opinion text before
   they were written down.
 
-`src/motion.ts` also carries the matter's first docket number, because nothing before it needed one — a notation
+`portal/src/motion.ts` also carries the matter's first docket number, because nothing before it needed one — a notation
 template renders a letter or an affidavit and neither has a caption. It is invented, like the rest of the matter and for
 the same reason the adverse firm is: a real Clark County docket number belongs to a real case.
 
@@ -484,8 +518,8 @@ that cannot 404.
 Copyright (C) 2026 Neon Law Foundation. Licensed under the [GNU Affero General Public License v3.0 or later](./LICENSE).
 [`LICENSE`](./LICENSE) is the license text verbatim as the Free Software Foundation publishes it, and it is the only
 license file in this repository — there is no summary of it to drift out of step. Every source file carries the matching
-SPDX notice, and [`src/test/license.test.ts`](./src/test/license.test.ts) asserts all of it: the license text against
-its exact length, the notice on every source file, and the notice in each file the build publishes.
+SPDX notice. [`portal/src/test/license.test.ts`](./portal/src/test/license.test.ts) asserts the text's exact length, the
+notice on every source file, and the notice in each file the build publishes.
 
 Section 13 is the clause that distinguishes the AGPL from the plain GPL, and it is not incidental for a browser portal
 that Navigator serves over a network: deploy a **modified** version for other people to use and you owe those users the
@@ -507,7 +541,7 @@ on, which keep their own terms and their own copyright holders:
 A copyleft license here and permissive licenses underneath are not in conflict: copyleft flows downstream to what
 includes this work, never upstream to what this work includes. navigator-ux was AGPL-3.0-only through v0.8.0 and is
 Apache-2.0 from v26.9.3 on; its `NOTICE` records that each earlier version stays under the terms it shipped with, so the
-pin in `package.json` is also what fixes which license applies.
+pin in `portal/package.json` is also what fixes which license applies.
 
 ```text
 SPDX-License-Identifier: AGPL-3.0-or-later

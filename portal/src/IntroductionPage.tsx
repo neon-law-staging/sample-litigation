@@ -890,9 +890,10 @@ function ResearchTab() {
  * The documents tab.
  *
  * Every PDF here is produced by `navigator notations render` from a notation
- * template in `notations/neon_law/`, which is why each card names the template
- * and its code: the provenance is the point. `pnpm render:documents`
- * regenerates all five.
+ * template in Navigator's shared catalog, which is why each card names the code
+ * it was rendered from: that code is the provenance, and it is what Navigator
+ * resolves when the matter references the template. `pnpm render:documents`
+ * regenerates all five into `dist/documents/`.
  *
  * This is the one area built on navigator-ux rather than the shadcn components
  * the rest of the portal uses — `Panel`, `DownloadCard`, and `Callout` come
@@ -997,7 +998,10 @@ function DocumentsTab() {
                   </code>{' '}
                   is a notation template — Markdown with a questionnaire and a workflow in its
                   frontmatter — and the PDF is what <code>navigator template render</code> produces
-                  from it once the answers are supplied.
+                  from it once the answers are supplied. It lives in Navigator&apos;s shared
+                  catalog rather than in this matter&apos;s repository: it is a Nevada form, good
+                  for every matter that needs one, and this matter references it by its{' '}
+                  <code className="font-mono text-xs">code</code> above.
                 </p>
                 <p>
                   The renderer validates against the same notation rule set as{' '}

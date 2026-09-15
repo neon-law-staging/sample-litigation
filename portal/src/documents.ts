@@ -4,11 +4,18 @@
 /**
  * The documents in the matter.
  *
- * All five PDFs are real files produced by `navigator notations render` from
- * the notation templates in `notations/neon_law/`, and `pnpm render:documents`
- * regenerates them. Nothing here is hand-authored PDF: if the prose in a
- * document is wrong, the template is wrong, and the fix is upstream of this
- * file.
+ * All five PDFs are real files produced by `navigator notations render`, and
+ * `pnpm render:documents` regenerates them into `dist/documents/` — they are
+ * build output rather than committed files. Nothing here is hand-authored PDF:
+ * if the prose in a document is wrong, the template is wrong, and the fix is
+ * upstream of this file, in a different repository.
+ *
+ * The five templates are jurisdiction-wide Neon Law notations and live in
+ * Navigator's shared catalog, not here. This Project *references* them by
+ * `code`: a copy in this repository would shadow the shared code and persist a
+ * matter-scoped version of global reference data, which is backwards. `code` is
+ * therefore the identity that matters below, and `template` only says where in
+ * the catalog to read it.
  *
  * `path` is relative to the bundle mount. It is joined through `portalPath` at
  * the point of use rather than written absolute, for the same reason every
@@ -33,9 +40,16 @@ export interface MatterDocument {
   kind: string
   /** Path under the mount, without a leading slash. */
   path: string
-  /** The notation template it was rendered from. */
+  /**
+   * Path to the notation template in Navigator's shared catalog, at the release
+   * `navigator.yaml` pins. It is a reference, not a file in this repository.
+   */
   template: string
-  /** The `code:` in that template's frontmatter. */
+  /**
+   * The `code:` in that template's frontmatter, and the identity Navigator
+   * resolves. A Notation created against it pins the shared catalog version, so
+   * this string is what carries provenance — never rename one.
+   */
   code: string
   /**
    * The render profile the template declares in its `output:` frontmatter.
@@ -77,7 +91,7 @@ export const DOCUMENTS: MatterDocument[] = [
     title: 'Engagement Letter',
     kind: 'Engagement letter',
     path: 'documents/engagement-letter-dermot-cruller.pdf',
-    template: 'notations/neon_law/nevada_engagement_letter.md',
+    template: 'templates/notations/neon_law/shared/engagement_letter_nevada.md',
     code: 'engagement_letter__nevada',
     format: 'letter',
     date: '2026-04-20',
@@ -91,7 +105,7 @@ export const DOCUMENTS: MatterDocument[] = [
     title: 'Summons',
     kind: 'Summons',
     path: 'documents/summons-wendell-prine.pdf',
-    template: 'notations/neon_law/nevada_summons.md',
+    template: 'templates/notations/neon_law/shared/summons_nevada.md',
     code: 'summons__nevada',
     format: 'plain',
     date: '2026-02-06',
@@ -105,7 +119,7 @@ export const DOCUMENTS: MatterDocument[] = [
     title: 'Notice of Rescission',
     kind: 'Notice',
     path: 'documents/notice-of-rescission.pdf',
-    template: 'notations/neon_law/nevada.md',
+    template: 'templates/notations/neon_law/shared/rescission_notice_nevada.md',
     code: 'rescission_notice__nevada',
     format: 'plain',
     date: '2026-05-02',
@@ -119,7 +133,7 @@ export const DOCUMENTS: MatterDocument[] = [
     title: 'Affidavit of Odile Cruller',
     kind: 'Affidavit',
     path: 'documents/affidavit-odile-cruller.pdf',
-    template: 'notations/neon_law/nevada_affidavit.md',
+    template: 'templates/notations/neon_law/shared/witness_affidavit_nevada.md',
     code: 'witness_affidavit__nevada',
     format: 'plain',
     date: '2026-06-11',
@@ -133,7 +147,7 @@ export const DOCUMENTS: MatterDocument[] = [
     title: 'Answer to Counterclaim',
     kind: 'Answer',
     path: 'documents/answer-to-counterclaim-dermot-cruller.pdf',
-    template: 'notations/neon_law/nevada_answer_to_counterclaim.md',
+    template: 'templates/notations/neon_law/shared/answer_to_counterclaim_nevada.md',
     code: 'answer_to_counterclaim__nevada',
     format: 'plain',
     date: '2026-08-31',
