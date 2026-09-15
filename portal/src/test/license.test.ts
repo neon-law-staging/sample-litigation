@@ -34,7 +34,7 @@ const LICENSE_BYTES = 34523
 // no extension. The pattern is deliberately wider than the one file it should
 // find — `it is the only license file` below is what makes that width a check
 // rather than an accident.
-const licenses = import.meta.glob<string>('../../LICENSE*', {
+const licenses = import.meta.glob<string>('../../../LICENSE*', {
   query: '?raw',
   import: 'default',
   eager: true,

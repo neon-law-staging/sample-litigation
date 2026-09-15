@@ -62,8 +62,10 @@ fixture — and it does not touch the separate rule that a client portal build m
 
 ## Before calling work done
 
-`pnpm check` — lint, typecheck, build, and tests, in that order. The build is part of it because several tests assert
-against what `pnpm build` actually emitted rather than against the source.
+`pnpm --dir portal check` — lint, typecheck, build, and tests, in that order.
+
+The build is part of it because several tests assert against what `pnpm build` actually emitted rather than against the
+source.
 
 `README.md` is the orientation: what mounts where, why the base path is load-bearing, what the ready-hook contract is,
 and how the documents are rendered. It is long because those are the things that break a bundle silently. Read it before
@@ -71,8 +73,8 @@ changing anything structural, and update it when the answer it gives stops being
 
 ## Notation lint
 
-`pnpm check` covers the TypeScript. The Markdown and the YAML answer to the Neon Law Navigator rule set instead, and the
-only thing that reads them is the Navigator CLI:
+`pnpm --dir portal check` covers the TypeScript. The Markdown and YAML answer to the Neon Law Navigator rule set; the
+Navigator CLI is the only thing that reads them:
 
 ```bash
 brew install neon-law-source-code/navigator/navigator   # macOS, and tap-qualified on purpose
@@ -90,8 +92,10 @@ branch red overnight. `notation` is one of the three jobs the required `ci` chec
 merge — and the pinned version is worth keeping in step with the formula above, since the two together are what "it
 passed on my machine" means here.
 
-`pnpm validate` is deliberately not part of `pnpm check`: `check` needs only what `pnpm install` brings, so a
-contributor who has not installed the CLI is not blocked by it. Run both before pushing.
+`pnpm validate` is deliberately not part of `pnpm --dir portal check`.
+
+`check` needs only what `pnpm --dir portal install` brings, so a contributor who has not installed the CLI is not
+blocked by it. Run both before pushing.
 
 `validate` takes no file list, and there is no list to keep current. It walks the tree itself and finds every Markdown,
 event, and YAML file under it, so a document is covered the moment it exists rather than the moment somebody remembers
@@ -126,9 +130,9 @@ Four things about writing prose that passes, none of them obvious from the messa
 
 The classification matters more here than in a repository of plain documentation. `notations/neon_law/` holds five
 notations, and `navigator validate` is the only thing in the tree that reads their `questionnaire:` and `workflow:`
-state machines at all — `pnpm check` never opens them, and `pnpm validate:templates` is the same check narrowed to that
-folder. It currently reports five N112 warnings there, one per template, each a `lawyer_review` step the workflow can
-reach whose automation is not built yet. That is the rule doing its job rather than noise to silence: a transition
+state machines at all — `pnpm --dir portal check` never opens them, and `pnpm --dir portal validate:templates` is the
+same check narrowed to that folder. It reports five N112 warnings there, one per template. Each `lawyer_review` step
+reaches automation that is not built yet. That is the rule doing its job rather than noise to silence: a transition
 naming something nothing implements is exactly what a reader of this repository would otherwise copy.
 
 ## Getting a change merged

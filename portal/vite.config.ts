@@ -22,6 +22,9 @@ import { defineConfig, type Plugin } from 'vitest/config'
  */
 const MOUNT = '/app/projects/sample-litigation/portal/'
 
+/** The Project root holds the licence the portal's source-level test reads. */
+const PROJECT_ROOT = fileURLToPath(new URL('..', import.meta.url))
+
 /**
  * The license notice carried into the published bundle.
  *
@@ -79,6 +82,11 @@ function licenseBanner(): Plugin {
 export default defineConfig({
   base: MOUNT,
   plugins: [react(), tailwindcss(), licenseBanner()],
+  server: {
+    fs: {
+      allow: [PROJECT_ROOT],
+    },
+  },
   resolve: {
     // `@/…` for `src/…`, which is the import style every shadcn component
     // ships with. Keeping it means a component pasted from the registry drops
