@@ -1,0 +1,29 @@
+name: cd
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+# The reusable publisher mints its deployment token only on this main-only
+# caller. The PR caller above has no permissions block: a called workflow
+# cannot widen the token the caller granted it. `gate` needs the same token
+# to exercise project-gate.yml's live document verification, live Project
+# gate, and seed import, which only run on a push to `main`.
+
+jobs:
+  gate:
+    uses: neon-law-source-code/navigator/.github/workflows/project-gate.yml@26.9.15-rc.2
+    with:
+      project: "sample-litigation"
+      host: "staging.neonlaw.com"
+  publish:
+    needs: gate
+    uses: neon-law-source-code/navigator/.github/workflows/project-publish.yml@26.9.15-rc.2
+    with:
+      project: "sample-litigation"
+      host: "staging.neonlaw.com"
