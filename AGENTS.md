@@ -128,12 +128,18 @@ Four things about writing prose that passes, none of them obvious from the messa
 - **Italics inside a list item bulleted with an asterisk report M037.** The bullet's own asterisk is counted as an
   inline marker. A dash bullet has no such problem, and M004 holds a file to whichever character its first bullet used.
 
-The classification matters more here than in a repository of plain documentation. `notations/neon_law/` holds five
-notations, and `navigator validate` is the only thing in the tree that reads their `questionnaire:` and `workflow:`
-state machines at all — `pnpm --dir portal check` never opens them, and `pnpm --dir portal validate:templates` is the
-same check narrowed to that folder. It reports five N112 warnings there, one per template. Each `lawyer_review` step
-reaches automation that is not built yet. That is the rule doing its job rather than noise to silence: a transition
-naming something nothing implements is exactly what a reader of this repository would otherwise copy.
+The classification matters more here than in a repository of plain documentation. This Project's own notations live in a
+flat `templates/`, one `templates/<code>.md` per blueprint, and `navigator validate` is the only thing in the tree that
+reads their `questionnaire:` and `workflow:` state machines at all — `pnpm --dir portal check` never opens them, and
+`pnpm --dir portal validate:templates` is the same check narrowed to that folder. It reports one N112 warning per
+template: each `lawyer_review` step reaches automation that is not built yet. That is the rule doing its job rather than
+noise to silence — a transition naming something nothing implements is exactly what a reader of this repository would
+otherwise copy.
+
+The five Nevada notations this matter's documents are rendered from are **not** here. They are jurisdiction-wide Neon
+Law forms in Navigator's shared catalog, and this Project references each by its `code` rather than carrying a copy: a
+copy shadows the shared code and persists a matter-scoped version of global reference data. Retain the established codes
+— a rename is a different template, not a refactor. `README.md` has the whole of it.
 
 ## Getting a change merged
 

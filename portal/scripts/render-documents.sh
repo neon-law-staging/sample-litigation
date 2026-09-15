@@ -3,27 +3,41 @@
 # Copyright (C) 2026 Shook Law PLLC.
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Render every notation template in this repository to the PDF the portal
-# serves.
-#
-# The PDFs under `public/documents/` are build artefacts, but they are
-# committed rather than produced during `vite build`: the bundle has to build on
-# a machine that has never installed the Navigator CLI, and CI should not need a
-# Rust toolchain to ship a React app. Re-run this whenever a template changes.
+# Render the five notation documents the portal serves.
 #
 #   pnpm render:documents
+#
+# This runs as `postbuild`, so `pnpm build` and `pnpm test` both produce them
+# and nothing has to be committed. `scripts/toolchain.sh` fetches the Navigator
+# CLI if it is not already on `PATH` at the version `navigator.yaml` pins.
+#
+# Where the templates come from
+# -----------------------------
+# Navigator's shared catalog, read at the pinned release tag — not from this
+# repository. These five are jurisdiction-wide Neon Law notations, and a Project
+# that carries a copy shadows the shared `code` and persists a matter-scoped
+# version of it. The Project references them by code instead; `src/documents.ts`
+# records which code each PDF came from.
+#
+# Where they are written
+# ----------------------
+# `dist/documents/`, which is the one place in this tree the repository gate
+# permits a rendered PDF. `public/documents/` used to hold them and no longer
+# exists: the gate follows the bytes, not the path, and refused them there.
+# Because `vite build` empties `dist/`, this script runs after it rather than
+# before.
 #
 # `navigator notations render` validates against the same notation rule set as
 # `navigator validate` and refuses a template carrying any violation, so a PDF
 # that appears is a template that passed.
-#
-# The subcommand is `notations render`, not `template render` — the Navigator
-# CLI renamed it, and `brew upgrade` tracks that rename automatically since
-# this script always runs against whatever the tap currently installs.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
-mkdir -p public/documents
+# shellcheck source=portal/scripts/toolchain.sh
+. "$(dirname "$0")/toolchain.sh"
+
+ensure_navigator
+mkdir -p dist/documents
 
 # The answers below are the fixture's dates. A real matter supplies these from
 # questionnaire responses rather than from a shell script.
@@ -44,21 +58,21 @@ trespass to land, and rescission of the alleged instrument conveying the \
 client's soul — and in the Eighth Judicial District Court action already on \
 file to the extent any claim remains before that court."
 
-navigator notations render ../notations/neon_law/nevada_summons.md \
-  --out public/documents/summons-wendell-prine.pdf \
+navigator notations render "$(catalog_template summons_nevada)" \
+  --out dist/documents/summons-wendell-prine.pdf \
   --answer person__client="$CLIENT" \
   --answer custom_datetime__issuance_date="$ISSUANCE"
 
-navigator notations render ../notations/neon_law/nevada.md \
-  --out public/documents/notice-of-rescission.pdf \
+navigator notations render "$(catalog_template rescission_notice_nevada)" \
+  --out dist/documents/notice-of-rescission.pdf \
   --answer person__client="$CLIENT" \
   --answer custom_datetime__offer_date="$OFFER" \
   --answer custom_datetime__completion_date="$COMPLETION" \
   --answer custom_datetime__discovery_date="$DISCOVERY" \
   --answer custom_datetime__notice_date="$NOTICE"
 
-navigator notations render ../notations/neon_law/nevada_engagement_letter.md \
-  --out public/documents/engagement-letter-dermot-cruller.pdf \
+navigator notations render "$(catalog_template engagement_letter_nevada)" \
+  --out dist/documents/engagement-letter-dermot-cruller.pdf \
   --answer person__client="$CLIENT" \
   --answer person__adverse_party="$ADVERSE" \
   --answer person__lawyer_dri="$LAWYER" \
@@ -67,16 +81,16 @@ navigator notations render ../notations/neon_law/nevada_engagement_letter.md \
   --answer custom_single_choice__arbitration_forum="$FORUM" \
   --answer custom_single_choice__governing_law="Nevada"
 
-navigator notations render ../notations/neon_law/nevada_affidavit.md \
-  --out public/documents/affidavit-odile-cruller.pdf \
+navigator notations render "$(catalog_template witness_affidavit_nevada)" \
+  --out dist/documents/affidavit-odile-cruller.pdf \
   --answer person__client="$CLIENT" \
   --answer custom_datetime__offer_date="$OFFER" \
   --answer custom_datetime__completion_date="$COMPLETION" \
   --answer custom_datetime__discovery_date="$DISCOVERY"
 
-navigator notations render ../notations/neon_law/nevada_answer_to_counterclaim.md \
-  --out public/documents/answer-to-counterclaim-dermot-cruller.pdf \
+navigator notations render "$(catalog_template answer_to_counterclaim_nevada)" \
+  --out dist/documents/answer-to-counterclaim-dermot-cruller.pdf \
   --answer person__client="$CLIENT" \
   --answer custom_datetime__answer_date="$ANSWERED"
 
-echo "rendered $(ls -1 public/documents/*.pdf | wc -l | tr -d ' ') document(s) to public/documents/"
+echo "rendered $(ls -1 dist/documents/*.pdf | wc -l | tr -d ' ') document(s) to dist/documents/"

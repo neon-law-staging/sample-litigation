@@ -155,9 +155,9 @@ no `.npmrc`. The URL in `portal/package.json` pins one exact version, so upgradi
 | `pnpm typecheck` | `tsc --noEmit` on its own. |
 | `pnpm test` | vitest. **Needs a build first** — the bundle gate asserts on real output rather than skipping. |
 | `pnpm check` | lint, typecheck, build, test, in that order. |
-| `pnpm validate:templates` | Validates `../notations` with Navigator's notation rules. |
-| `pnpm render:documents` | Re-render each notation template to `portal/public/documents/`. Needs the Navigator CLI. |
-| `pnpm render:pleadings` | Re-compiles Typst pleadings to `portal/public/documents/`; needs `typst`. |
+| `pnpm validate:templates` | Validates `../templates` with Navigator's notation rules. |
+| `pnpm render:documents` | Re-render each catalog notation to `portal/dist/documents/`. Runs as `postbuild`. |
+| `pnpm render:pleadings` | Re-compiles Typst pleadings to `portal/dist/documents/`. Runs as `postbuild`. |
 
 Navigator builds this repository the same way. `navigator dev sample-project` clones it into a temporary directory, runs
 `pnpm install --frozen-lockfile` and `pnpm build`, and stages the resulting `dist/` under `.devx/sample-project/dist`;
@@ -192,14 +192,15 @@ portal/src/caseLibrary.ts          real citations outside Count II's scope — n
 portal/src/discovery.ts            the interrogatory exchange, and the rules it is measured against
 portal/src/responses.ts            the set served on us, the drafts under it, and the derived deadline
 portal/src/trialPrep.ts            the prep cards, the ground rules, and the mock examination
-portal/src/documents.ts            the rendered PDFs and the templates behind them
+portal/src/documents.ts            the rendered PDFs and the catalog codes behind them
 portal/src/motion.ts               the motion, and the limitations arithmetic it derives rather than states
 portal/src/mount.ts                links derived from the base rather than written out
-notations/neon_law/*.md     notation templates; the source of five of the PDFs
+templates/*.md                     this matter's own notation blueprints, flat and project-coded
 portal/pleadings/pleading-paper.typ the 28-line grid, the rules, and the caption box
 portal/pleadings/*.typ             Typst pleadings; the source of the sixth PDF
-portal/scripts/render-documents.sh `navigator template render`, once per template
+portal/scripts/render-documents.sh `navigator template render`, once per catalog template
 portal/scripts/render-pleadings.sh `typst compile`, once per pleading
+portal/scripts/toolchain.sh        fetches the pinned Navigator CLI and Typst when they are absent
 ```
 
 ### Styling
@@ -222,11 +223,11 @@ app that ignores the theme.
 
 ### Documents
 
-No PDF under `portal/public/documents/` is hand-authored.
+No PDF under `portal/dist/documents/` is hand-authored.
 
 Five come from `navigator notations render`.
 
-Their notation templates are in `notations/neon_law/`.
+Their notation templates are in Navigator's shared catalog, not here.
 
 The motion comes from Typst.
 
@@ -244,17 +245,35 @@ Neon Law letterhead while the other four render as plain pages. That key is the 
 finished document should look like, which is why `MatterDocument.format` carries it to the card rather than letting the
 component guess from the title.
 
-They are **committed rather than generated during `vite build`**: this bundle has to build on a machine that has never
-installed the Navigator CLI, and CI should not need a Rust toolchain to ship a React app. Re-run `pnpm render:documents`
-whenever a template changes. `portal/src/test/bundle.test.ts` asserts all six PDFs reach `dist/`; Vite otherwise would
-not notice them going missing.
+None of those five lives in this repository, and that is the second reversal worth knowing about. They are
+jurisdiction-wide Neon Law forms — `jurisdiction: NV`, titles like "Summons (Nevada)" — and they belong to Navigator's
+shared catalog under `templates/notations/neon_law/shared/`. This matter **references** each one by its `code`, which is
+the identity Navigator resolves: when no `templates/<code>.md` exists here, notation creation finds the workspace-shared
+row and pins that exact version, so provenance stays with the catalog. Carrying a copy would shadow the shared code and
+persist a matter-scoped version of global reference data, which is backwards — and a renamed code is a different
+template, not a refactor, because there is no alias and no migration path. So the codes in `portal/src/documents.ts` are
+fixed: `summons__nevada`, `rescission_notice__nevada`, `engagement_letter__nevada`, `witness_affidavit__nevada`, and
+`answer_to_counterclaim__nevada`. This repository's own flat `templates/` holds only blueprints that are genuinely
+specific to this matter.
 
-`pnpm validate:templates` is the check that keeps the templates renderable, and for the same reason it is **not in CI**
-— it needs the Navigator CLI, and a React build should not wait on a Rust toolchain. So run it locally whenever a
-template changes. The notation rule set is versioned in Navigator rather than here, which means a template can stop
-validating without anything in this repository changing: that is exactly what happened to the `staff_review` workflow
-state these templates used to carry, before `N106` began requiring the `lawyer_review` gate that every one of them now
-names.
+They are **generated during the build rather than committed**, which is a reversal of what this repository used to do
+and worth understanding before changing it. The repository gate refuses a rendered PDF anywhere in this tree except
+`dist/` — it follows the bytes rather than the path, so moving them elsewhere does not help — and `dist/` is the one
+directory `vite build` owns. So both render scripts run as `postbuild`, after Vite has emptied and refilled it, and
+`pnpm test` gets all six because it builds first. `portal/src/test/bundle.test.ts` asserts every one of them reaches
+`dist/`; Vite otherwise would not notice them going missing.
+
+That is also why `portal/scripts/toolchain.sh` exists. The reusable gate this repository is pinned to does install the
+Navigator CLI, but only after it has run `typecheck`, `test`, and `build`, and it never installs Typst at all — and a
+caller pinned to an immutable release tag cannot reorder that job. So the build fetches both tools itself, the CLI at
+the exact version `navigator.yaml` pins, and skips the download entirely when they are already on `PATH`. Nothing is
+written inside the checkout.
+
+`pnpm validate:templates` is the check that keeps this matter's own blueprints renderable; `navigator validate .` runs
+the whole rule set over the whole tree, and the gate's `notation` job runs it in CI on every pull request. The notation
+rule set is versioned in Navigator rather than here, which means a template can stop validating without anything in this
+repository changing: that is exactly what happened to the `staff_review` workflow state these templates used to carry,
+before `N106` began requiring the `lawyer_review` gate that every one of them now names.
 
 ### The viewer is ours
 
@@ -418,14 +437,15 @@ from there. That is the right trade for a letter or an affidavit and the wrong o
 profile in this repository would be inventing it in the wrong repository, because the profiles are Navigator's.
 
 So the split is by tool, and `portal/scripts/render-pleadings.sh` is separate from `portal/scripts/render-documents.sh`
-for the same reason: that one needs the Navigator CLI and a Rust toolchain. This one needs `typst`. A contributor who
-who edits the motion does not have to install Navigator to re-render it. Both outputs are committed rather than built by
-Vite, and `portal/src/test/bundle.test.ts` asserts the motion reaches `dist/` separately from the five notation PDFs.
-`vite build` does not know Typst exists, so it would not notice the file going missing.
+for the same reason: that one needs the Navigator CLI. This one needs `typst`. A contributor who edits the motion does
+not have to install Navigator to re-render it, and `portal/scripts/toolchain.sh` fetches whichever of the two is
+missing. Both outputs land in `dist/documents/` during `postbuild`, and `portal/src/test/bundle.test.ts` asserts the
+motion reaches `dist/` separately from the five notation PDFs. `vite build` does not know Typst exists, so it would not
+notice the file going missing.
 
-`pnpm validate:templates` runs `navigator validate ../notations` over the whole of `notations/`. That is why
-`portal/pleadings/` is a top-level directory rather than `templates/typst/`. A `.typ` file does not belong in notation
-validation.
+`pnpm validate:templates` runs `navigator validate ../templates` over this matter's own blueprints. That is why
+`portal/pleadings/` is a directory of the application rather than `templates/typst/`. A `.typ` file does not belong in
+notation validation.
 
 Three things about `portal/pleadings/pleading-paper.typ`:
 

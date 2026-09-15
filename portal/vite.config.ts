@@ -3,6 +3,8 @@
 
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+import { createReadStream, statSync } from 'node:fs'
+import { join, normalize } from 'node:path'
 import { fileURLToPath } from 'node:url'
 // vitest/config re-exports defineConfig with the `test` block typed.
 import { defineConfig, type Plugin } from 'vitest/config'
@@ -79,9 +81,50 @@ function licenseBanner(): Plugin {
   }
 }
 
+/** Where both render scripts write, and the only place the gate allows a PDF. */
+const DOCUMENTS = fileURLToPath(new URL('./dist/documents/', import.meta.url))
+
+/**
+ * Serve the rendered documents on the dev server.
+ *
+ * In a built bundle these are ordinary files under `dist/documents/`, reached
+ * by the same mounted URL as every other asset. There is nothing for Vite's
+ * static handler to serve in development, though: they are not in `public/`,
+ * because the repository gate refuses a rendered PDF anywhere in this tree
+ * except `dist/`. `pnpm dev` renders them through `predev` and this middleware
+ * answers those URLs from the directory the build writes, so development and
+ * the bundle read one render rather than two.
+ *
+ * Restricted to `.pdf`, and the joined path is checked to still be inside the
+ * directory afterwards: a dev server that will serve `../../..` on request is a
+ * dev server that will serve a contributor's home directory.
+ */
+function renderedDocuments(): Plugin {
+  return {
+    name: 'portal-rendered-documents',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use(`${MOUNT}documents`, (request, response, next) => {
+        const name = decodeURIComponent((request.url ?? '').split('?')[0] ?? '')
+        const file = normalize(join(DOCUMENTS, name))
+        if (!name.endsWith('.pdf') || !file.startsWith(DOCUMENTS)) return next()
+
+        try {
+          if (!statSync(file).isFile()) return next()
+        } catch {
+          return next()
+        }
+
+        response.setHeader('Content-Type', 'application/pdf')
+        createReadStream(file).pipe(response)
+      })
+    },
+  }
+}
+
 export default defineConfig({
   base: MOUNT,
-  plugins: [react(), tailwindcss(), licenseBanner()],
+  plugins: [react(), tailwindcss(), licenseBanner(), renderedDocuments()],
   server: {
     fs: {
       allow: [PROJECT_ROOT],

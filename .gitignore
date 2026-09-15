@@ -11,3 +11,10 @@ coverage/
 .env
 .env.*
 !.env.example
+
+# Rendered documents: build output, never committed. `pnpm --dir portal build`
+# produces all six under `portal/dist/documents/` through its `postbuild` hook,
+# which the `dist/` line above already covers. Named again here because it is
+# the only path they may take: the repository gate refuses a rendered PDF
+# anywhere else in this tree, `portal/public/documents/` included.
+portal/dist/documents/
