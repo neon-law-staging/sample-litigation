@@ -361,38 +361,41 @@ export function MotionPage() {
           <Card>
             <CardHeader>
               <div>
-                <CardTitle>How this document is made</CardTitle>
-                <CardDescription>Typst, not a word processor.</CardDescription>
+                <CardTitle>How this document is stored</CardTitle>
+                <CardDescription>A pointer, not bytes in the repository.</CardDescription>
               </div>
               <ScrollText className="size-5 text-muted-foreground" />
             </CardHeader>
             <CardContent className="space-y-3 text-sm leading-relaxed">
               <p>
-                The other three documents in this matter are rendered from notation templates.
-                This one is not:{' '}
+                The other five documents in this matter are rendered from notation templates during
+                the build. This one is not. It is an uploaded asset, and what this repository commits
+                is the pointer{' '}
                 <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
-                  {MOTION_DOCUMENT.source}
-                </code>{' '}
-                is Typst source, and{' '}
+                  {MOTION_DOCUMENT.pointer}
+                </code>
+                , whose own path below <code className="font-mono text-xs">documents/</code> is its
+                object key. The asset it addresses is{' '}
                 <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
-                  {MOTION_DOCUMENT.furniture}
-                </code>{' '}
-                is the pleading paper it sits on.
+                  {MOTION_DOCUMENT.assetId}
+                </code>
+                , and the pointer’s <code className="font-mono text-xs">sha256</code> is what
+                verifies a fetch of it.
               </p>
               <p className="text-muted-foreground">
-                Pleading paper is a typesetting problem before it is a drafting one.{' '}
-                {MOTION_DOCUMENT.ruledLines} numbered lines have to line up with the text beside
-                them on every page, which means one baseline grid and every vertical measurement in
-                the document a whole multiple of it. There is no notation render profile for that,
-                and inventing one here would be inventing it in the wrong repository.
+                It is still pleading paper: {MOTION_DOCUMENT.ruledLines} numbered lines that have to
+                line up with the text beside them on every page, which means one baseline grid and
+                every vertical measurement in the document a whole multiple of it.
               </p>
               <p className="text-muted-foreground">
-                Regenerate it with{' '}
+                Fetch the bytes with{' '}
                 <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
                   {MOTION_DOCUMENT.script}
                 </code>
-                . Like the notation PDFs, it is committed rather than built by Vite — the bundle has
-                to build on a machine that has never installed Typst.
+                . They are never committed — the repository gate refuses a PDF outside{' '}
+                <code className="font-mono text-xs">dist/</code> — so a reader who has not fetched
+                them, or who is not authorized to read the asset, gets the viewer’s fallback and a
+                direct link rather than a broken frame.
               </p>
             </CardContent>
           </Card>

@@ -81,8 +81,29 @@ function licenseBanner(): Plugin {
   }
 }
 
-/** Where both render scripts write, and the only place the gate allows a PDF. */
+/** Where the render script writes, and the only place the gate allows a PDF. */
 const DOCUMENTS = fileURLToPath(new URL('./dist/documents/', import.meta.url))
+
+/**
+ * The staging directory a document pointer addresses. `navigator site pull` fills
+ * it from the committed pointers; its bytes are gitignored and never reach `dist/`,
+ * so the dev server reads them here or not at all.
+ */
+const STAGING = fileURLToPath(new URL('../documents/', import.meta.url))
+
+/** The first root holding `name`, or null — checked for containment, not trusted. */
+function servedDocument(name: string): string | null {
+  for (const root of [DOCUMENTS, STAGING]) {
+    const file = normalize(join(root, name))
+    if (!file.startsWith(root)) continue
+    try {
+      if (statSync(file).isFile()) return file
+    } catch {
+      continue
+    }
+  }
+  return null
+}
 
 /**
  * Serve the rendered documents on the dev server.
@@ -106,14 +127,10 @@ function renderedDocuments(): Plugin {
     configureServer(server) {
       server.middlewares.use(`${MOUNT}documents`, (request, response, next) => {
         const name = decodeURIComponent((request.url ?? '').split('?')[0] ?? '')
-        const file = normalize(join(DOCUMENTS, name))
-        if (!name.endsWith('.pdf') || !file.startsWith(DOCUMENTS)) return next()
+        if (!name.endsWith('.pdf')) return next()
 
-        try {
-          if (!statSync(file).isFile()) return next()
-        } catch {
-          return next()
-        }
+        const file = servedDocument(name)
+        if (file === null) return next()
 
         response.setHeader('Content-Type', 'application/pdf')
         createReadStream(file).pipe(response)
