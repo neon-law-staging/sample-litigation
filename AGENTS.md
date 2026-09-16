@@ -2,25 +2,6 @@
 
 This is a `navigator` project, use the `navigator` CLI to work here.
 
-## One version, pinned in three places
-
-The `version:` in `navigator.yaml` is the Navigator release this repository is held to. `portal/scripts/toolchain.sh`
-reads it and fetches that exact CLI, both workflows call `project-gate.yml` at the same tag, and `portal/package.json`
-pins `@neon-law-source-code/navigator-ux` to it. Bump them together: a renderer newer than the gate produces output the
-gate never checked.
-
-## Project codes are client identifiers
-
-A Project code names a matter and its repository, so it identifies a client. The one legitimate use here is this
-repository naming itself, as in `navigator.yaml`, its paths, and its portal mount.
-
-Do not copy a Project code in from another repository, and do not put one in a commit message, code comment, branch
-name, or pull-request body. A precedent citation is still a breach; cite the governing issue by its bare identifier
-instead.
-
-Read matter data through Navigator's `/api` read surfaces and write through its one REST command boundary. Do not add a
-second backend. No legal file, client upload, answer, generated document, or secret belongs in this tree.
-
 ## Everything here is fixture data
 
 *Cruller v. Prine* is a simulated matter. This is a worked example a contributor reads and clones, so anything committed
@@ -31,24 +12,6 @@ kind `portal/src/research.ts` and `portal/src/caseLibrary.ts` already cite and m
 be committed verbatim and clearly marked as real rather than fixture, because it discloses nothing about any matter and
 a government work carries no copyright. That covers the authority's own text only; matter-specific analysis of it stays
 fixture, and the off-origin rule below still applies.
-
-## The portal
-
-- Build for `/app/projects/sample-litigation/<app>/`; the source folder is not a URL segment.
-- Derive every in-app path from `import.meta.env.BASE_URL` rather than writing an absolute path by hand.
-- A Vite base rewrites module and asset URLs and never an `href` in source.
-- The `portal-chrome` skill governs how the portal is allowed to look.
-
-## Off-origin strings
-
-Rule Y011 forbids comments in `navigator.yaml`, so every `allowed_prefixes` and `allowed_hosts` entry carries its reason
-as its value. The manifest is the record; there is no second copy of it to keep in step. An entry added later states its
-reason there and in the pull request that adds it.
-
-Each entry today is an `href` a reader clicks, a URL-parse base, a namespace identifier compared as a string, or a
-licence notice in a preserved comment banner — never a fetch, and never something to strip to quiet the gate. Whether a
-real client portal may carry an off-origin authority link is a policy question this repository cannot settle; these are
-fixture citations, so no client's work product sits behind them.
 
 ## The five Nevada notations are not here
 
