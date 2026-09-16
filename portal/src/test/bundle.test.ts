@@ -91,9 +91,9 @@ describe('the built bundle', () => {
   })
 
   it('ships the rendered notation documents', () => {
-    // The portal links to these by path. They are committed artefacts rather
-    // than build output, so nothing in `vite build` would notice them going
-    // missing — this is the check that would.
+    // The portal links to these by path. `render-documents.sh` emits them in
+    // `postbuild`, after Vite has emptied `dist/`, so nothing in `vite build`
+    // itself would notice them going missing — this is the check that would.
     const names = Object.keys(pdfs).map((path) => path.split('/').pop())
     expect(names, BUILD_FIRST).toContain('engagement-letter-dermot-cruller.pdf')
     expect(names).toContain('notice-of-rescission.pdf')
@@ -102,14 +102,14 @@ describe('the built bundle', () => {
     expect(names).toContain('answer-to-counterclaim-dermot-cruller.pdf')
   })
 
-  it('ships the Typst pleading', () => {
-    // Same reasoning, different renderer. `pnpm render:pleadings` produces this
-    // one from `pleadings/motion-summary-judgment.typ`, and it is committed for
-    // the same reason the notation PDFs are: nothing in `vite build` knows Typst
-    // exists, so nothing in `vite build` would notice this file going missing.
-    const names = Object.keys(pdfs).map((path) => path.split('/').pop())
-    expect(names, BUILD_FIRST).toContain('motion-for-summary-judgment.pdf')
-  })
+  // The motion is no longer built here. Its Typst source is gone and it is a
+  // document pointer now — `documents/pleadings/motion-for-summary-judgment.pdf.yml`
+  // — whose bytes `navigator site pull` fetches into staging. Nothing yet copies
+  // those bytes into `dist/`, so `MOTION.path` currently resolves to a 404 and
+  // there is no assertion to make. This stays until `pull` can run: `site sync`
+  // cannot parse this repository's manifest, and the Y005 rule the gate enforces
+  // means the manifest is right and the CLI is wrong.
+  it.todo('serves the motion from its document pointer')
 
   it('ships the pdf.js worker, and reaches it from the mount', () => {
     // The viewer's most silent failure: with no resolvable worker, pdf.js

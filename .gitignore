@@ -18,3 +18,10 @@ coverage/
 # the only path they may take: the repository gate refuses a rendered PDF
 # anywhere else in this tree, `portal/public/documents/` included.
 portal/dist/documents/
+
+# Document staging. `navigator site sync` uploads these bytes through Navigator
+# and retains a `.pdf.yml` pointer beside each one; the pointer is the committed
+# record and the bytes never are. `navigator site pull` refills this directory
+# from the committed pointers. The repository gate refuses a PDF anywhere in this
+# tree except `dist/`, and it follows the bytes rather than the path.
+documents/**/*.pdf

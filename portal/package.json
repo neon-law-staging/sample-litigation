@@ -11,9 +11,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "predev": "./scripts/render-documents.sh && ./scripts/render-pleadings.sh",
+    "predev": "./scripts/render-documents.sh",
     "build": "tsc --noEmit && vite build",
-    "postbuild": "./scripts/render-documents.sh && ./scripts/render-pleadings.sh",
+    "postbuild": "./scripts/render-documents.sh",
     "preview": "vite preview",
     "lint": "oxlint",
     "validate": "navigator validate",
@@ -22,7 +22,6 @@
     "test:watch": "vitest",
     "check": "pnpm lint && pnpm typecheck && pnpm build && pnpm test",
     "render:documents": "./scripts/render-documents.sh",
-    "render:pleadings": "./scripts/render-pleadings.sh",
     "validate:templates": "navigator validate ../templates"
   },
   "dependencies": {

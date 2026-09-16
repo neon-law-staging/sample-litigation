@@ -65,6 +65,26 @@ rather than carrying a copy: a copy shadows the shared code and persists a matte
 data. Retain the established codes — a rename is a different template, not a refactor. Each is rendered through
 `navigator notations render` by `portal/scripts/render-documents.sh`, and `README.md` has the whole of it.
 
+## Documents are pointers, not bytes
+
+`navigator site sync` uploads staged `documents/` bytes through Navigator and retains a `.pdf.yml` pointer beside each
+one; `navigator site pull` refills that staging directory from the committed pointers. The bytes are never committed —
+`.gitignore` covers them, and the gate refuses a PDF anywhere outside `dist/` regardless, because it follows the bytes
+rather than the path.
+
+The object key is the pointer's own path below `documents/`, so a folder in the key is a folder on disk and there is no
+`key:` field to set. A pointer carries `kind`, `visibility`, `current_version`, and `previous_version`; a version
+carries `version`, `asset_id`, `created_at`, `sha256`, and `size_bytes`. `--kind` is a closed list, and `--visibility`
+defaults to `internal`, so a document the portal is meant to show has to say `client`.
+
+`navigator validate` and `navigator site document verify` both check pointers offline, and `verify --ci --host` checks
+them against the live asset record over GitHub Actions OIDC. CI needs no bucket credential for this, which is also why
+the check is not a second backend.
+
+One thing is broken today: `navigator site sync` refuses this repository's manifest, wanting `project:` as a string
+where `navigator.yaml` carries a map. `navigator validate` and `navigator site projects gate` both accept the map. That
+is a CLI defect, so it belongs in a Linear issue on the Lawyers team rather than in a workaround here.
+
 ## Before calling work done
 
 ```bash
