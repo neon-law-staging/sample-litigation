@@ -17,13 +17,13 @@ permissions:
 
 jobs:
   gate:
-    uses: neon-law-source-code/navigator/.github/workflows/project-gate.yml@26.9.16-rc.1
+    uses: neon-law-source-code/navigator/.github/workflows/project-gate.yml@26.9.16
     with:
       project: "sample-litigation"
       host: "staging.neonlaw.com"
   publish:
     needs: gate
-    uses: neon-law-source-code/navigator/.github/workflows/project-publish.yml@26.9.16-rc.1
+    uses: neon-law-source-code/navigator/.github/workflows/project-publish.yml@26.9.16
     with:
       project: "sample-litigation"
       host: "staging.neonlaw.com"
