@@ -9,6 +9,7 @@ import { DiscoveryPage } from './DiscoveryPage'
 import { IntroductionPage } from './IntroductionPage'
 import { MotionPage } from './MotionPage'
 import { ResponsesPage } from './ResponsesPage'
+import { TimelinePage } from './TimelinePage'
 import { TrialPrepPage } from './TrialPrepPage'
 import { INTERROGATORIES, PROCEEDING } from './discovery'
 import { MATTER, MATTER_FACTS, NEXT_STEPS } from './matter'
@@ -17,6 +18,7 @@ import { portalPath } from './mount'
 import { READY_KICKER } from './ready'
 import { DAYS_REMAINING, INBOUND, READINESS_COUNTS, RECEIVED } from './responses'
 import { SOUL_CLAIM } from './soulContract'
+import { AHEAD, DAYS_TO_NEXT, FILED, NEXT_EVENT, OPENED } from './timeline'
 import { AWAITING_WITNESS, DAYS_TO_DEPOSITION, PREP, PREP_CARDS } from './trialPrep'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -40,6 +42,7 @@ import { cn } from '@/lib/utils'
 
 type View =
   | 'overview'
+  | 'timeline'
   | 'introduction'
   | 'discovery'
   | 'interrogatories'
@@ -58,6 +61,7 @@ type View =
  * that cannot 404, at the cost of a `#` a reader will not notice.
  */
 const VIEW_BY_HASH: Record<string, View> = {
+  '#timeline': 'timeline',
   '#introduction': 'introduction',
   '#discovery': 'discovery',
   '#interrogatories': 'interrogatories',
@@ -84,6 +88,7 @@ export function App() {
       <TopNav view={view} />
 
       <main className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        {view === 'timeline' ? <TimelinePage /> : null}
         {view === 'introduction' ? <IntroductionPage /> : null}
         {view === 'discovery' ? <DiscoveryPage /> : null}
         {view === 'interrogatories' ? <ResponsesPage /> : null}
@@ -105,6 +110,7 @@ export function App() {
 
 function TopNav({ view }: { view: View }) {
   const links: { label: string; href: string; current: boolean }[] = [
+    { label: 'Timeline', href: portalPath('#timeline'), current: view === 'timeline' },
     { label: 'Overview', href: portalPath(''), current: view === 'overview' },
     {
       label: SOUL_CLAIM.count,
@@ -142,7 +148,7 @@ function TopNav({ view }: { view: View }) {
           </span>
         </div>
         {/*
-          * Five sections wrap rather than scroll: a tab strip that runs off the
+          * The sections wrap rather than scroll: a tab strip that runs off the
           * side of a phone hides the section a reader has not been told exists,
           * and the current-page underline is what makes two rows legible.
           */}
@@ -180,7 +186,7 @@ function Overview() {
             {MATTER.caption}
           </h1>
           <p className="font-mono text-xs uppercase tracking-wide text-muted-foreground">
-            {MATTER.claim} · {MATTER.jurisdiction} · Fixture matter
+            {MATTER.claim} · {MATTER.jurisdiction}
           </p>
         </div>
         <p className="max-w-3xl text-lg leading-relaxed text-muted-foreground">
@@ -202,6 +208,32 @@ function Overview() {
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]">
         <div className="space-y-6">
+          <Card className="border-l-4 border-l-primary">
+            <CardHeader>
+              <div>
+                <CardTitle>The case so far</CardTitle>
+                <CardDescription>
+                  Opened {OPENED.dateLabel} · {FILED.length} events on file · {AHEAD.length} dates
+                  ahead
+                </CardDescription>
+              </div>
+              <Badge variant="outline">{DAYS_TO_NEXT} days</Badge>
+            </CardHeader>
+            <CardContent className="space-y-4 text-[0.95rem] leading-relaxed">
+              <p>
+                Everything below is one part of a case that started with a complaint and a summons
+                and has been moving ever since. The timeline is that story in order — what was
+                filed, what was served, what came back, and what is still on the calendar. The next
+                date is {NEXT_EVENT.dateLabel}: {NEXT_EVENT.title.toLowerCase()}.
+              </p>
+              <Button asChild>
+                <a href={portalPath('#timeline')}>
+                  See what has happened so far <ArrowRight />
+                </a>
+              </Button>
+            </CardContent>
+          </Card>
+
           <Card className="border-l-4 border-l-primary">
             <CardHeader>
               <div>
@@ -375,9 +407,7 @@ function Overview() {
                 {MATTER.caption}, so only the people on the matter can reach it.
               </p>
               <p>
-                Nothing on this page is a live record. {MATTER.caption} is a fixture matter, and
-                this bundle is the worked example a contributor reads before attaching a real
-                application to a real one.
+                This is a simulated case {MATTER.caption}.
               </p>
             </CardContent>
           </Card>

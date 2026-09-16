@@ -1,9 +1,7 @@
 # Navigator Sample Project — Litigation
 
 The reference **project application** for [Navigator](https://github.com/neon-law-source-code/navigator): a client
-portal for the fixture matter *Cruller v. Prine*, built with Vite, React 19, Tailwind CSS, and shadcn-style components
-owned in this repository — plus [navigator-ux](https://github.com/neon-law-source-code/navigator-ux) on the documents
-tab, where it frames a PDF viewer this repository owns.
+portal for the fixture matter *Cruller v. Prine*.
 
 It exists so that "attach a React app to a matter" has a worked example a contributor can read, clone, and copy — and so
 Navigator's own local development loop has something real to build and serve instead of a hardcoded HTML string.
@@ -19,56 +17,7 @@ Navigator serves this bundle at:
 /app/projects/sample-litigation/portal/
 ```
 
-`sample-litigation` is the Project code; `portal` is a literal segment of Navigator's route, not an application name it
-looks up — see `portal/src/project_portal.rs` in the Navigator repository. Navigator streams the bytes through its own
-origin behind the session cookie and the participation gate; it never redirects to a signed URL, because a signed URL is
-bearer-shareable and would not carry the session.
-
-That has three consequences for this app:
-
-1. **Vite `base` is baked at build time** and must be `/app/projects/sample-litigation/portal/`. A bundle built with the
-   wrong base 404s on every asset. It is one named constant at the top of `portal/vite.config.ts`.
-2. **Never hardcode a mount-absolute link.** Write links relative to the base, or derive them —
-   `portal/src/mount.ts` is the whole of that job here, and `portalPath()` is what every in-bundle link uses. Hardcoded
-   `/sample-litigation/...` strings are the single most common way one of these bundles breaks under its real mount.
-   Links to Navigator's *own* routes (`/app/projects`) stay absolute, because they are Navigator's paths rather than
-   paths inside this bundle.
-3. **Same-origin is the whole mechanism.** Because the bundle is served from Navigator's origin, its calls to
-   Navigator's read and command APIs are session-gated automatically. There is no backend in this repository.
-
-The serve CSP is:
-
-```text
-default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'
-```
-
-Nothing in this bundle is inline or off-origin, which is why it needs no exception. That rules out a few things a
-vibe-coded prototype reaches for by default:
-
-- **No `cdn.tailwindcss.com`.** Tailwind is compiled into the hashed CSS asset by `@tailwindcss/vite`. A CDN script tag
-  works on the dev server and is blocked in production — the worst possible place to find out — so
-  `portal/src/test/bundle.test.ts` asserts the built output loads nothing from a CDN.
-- **No webfont *request*.** There are two webfonts — Source Serif 4, vendored by navigator-ux under the OFL — and the
-  build emits both as hashed assets under the mount, so `font-src 'self'` covers them. A font served from a CDN would be
-  blocked here, and in an authenticated portal it would also be a third party watching every page of a matter.
-- **No remote images.** The illustrations in `portal/src/art.tsx` are original inline SVG.
-  They use the same variables as everything else. Hotlinking art could fail when another server does.
-
-## The one contract Navigator depends on
-
-The bundle must show that it actually mounted, through an element with:
-
-```html
-id="sample-litigation-portal-ready"
-```
-
-React renders it, on the page kicker, so it exists **only once the app has mounted** — which is the point of it. A
-static marker in `index.html` would report "ready" for a bundle that failed to boot, and Navigator's browser walkthrough
-drives a real browser and waits on a CSS locator, so what it sees is the live DOM.
-
-The built `index.html` also carries `<meta name="navigator-ready-hook" content="sample-litigation-portal-ready">`, so a
-check that reads the published document rather than driving a browser still finds the contract it is looking for. Both
-are asserted by `portal/src/test/bundle.test.ts`, against what `pnpm build` actually emitted.
+which you can find at <https://staging.neonlaw.com>
 
 ## Run it locally
 
@@ -87,139 +36,6 @@ pnpm install
 ```bash
 pnpm dev
 ```
-
-Then open the portal at its mount path — **not** `http://localhost:5173/`, which is outside the base and serves nothing:
-
-```text
-http://localhost:5173/app/projects/sample-litigation/portal/
-```
-
-The PDF viewer is on the documents tab, which this link opens directly:
-
-```text
-http://localhost:5173/app/projects/sample-litigation/portal/#introduction
-```
-
-Pick **Documents** from the tab strip on that page. The first document opens in the viewer on arrival; the cards beside
-it switch which one is open, and the toolbar carries page navigation, zoom, fit-to-width, and find-in-document.
-
-One thing worth knowing if the page looks stuck: pdf.js advances its render on `requestAnimationFrame`, which browsers
-do not fire in a hidden or background tab. A viewer left in a background tab shows a blank page until the tab is brought
-to the front, and then paints. That is pdf.js's behavior rather than this component's.
-
-The discovery exchange is its own view, and needs no tab:
-
-```text
-http://localhost:5173/app/projects/sample-litigation/portal/#discovery
-```
-
-The interrogatories served *on* the client, and the responses being drafted for them, are the fourth section in the
-strip:
-
-```text
-http://localhost:5173/app/projects/sample-litigation/portal/#interrogatories
-```
-
-The witness preparation deck — the flashcards the client studies before he is deposed — is the fifth:
-
-```text
-http://localhost:5173/app/projects/sample-litigation/portal/#trial-prep
-```
-
-The motion for partial summary judgment — the matter's first court filing, and the one document here set on pleading
-paper — is the sixth:
-
-```text
-http://localhost:5173/app/projects/sample-litigation/portal/#motion
-```
-
-## Develop
-
-```bash
-pnpm check      # what a contributor should run before pushing
-```
-
-The dev server serves under the real mount path, not `/`, because the base is baked in and a dev loop that disagrees
-with production about where the app lives is a dev loop that hides base bugs.
-
-[navigator-ux's GitHub Release](https://github.com/neon-law-source-code/navigator-ux/releases) is where the library
-comes from: it is not published to npm at all, and that is why `pnpm install` needs no registry account, no token, and
-no `.npmrc`. The URL in `portal/package.json` pins one exact version, so upgrading changes that URL rather than a range.
-`portal/pnpm-lock.yaml` records the tarball's sha512, so a clean clone resolves the same bytes each time.
-
-| Command | What it does |
-| --- | --- |
-| `pnpm dev` | Vite dev server, under the mount path. |
-| `pnpm build` | `tsc --noEmit`, then the production bundle into `dist/`. |
-| `pnpm lint` | oxlint. |
-| `pnpm typecheck` | `tsc --noEmit` on its own. |
-| `pnpm test` | vitest. **Needs a build first** — the bundle gate asserts on real output rather than skipping. |
-| `pnpm check` | lint, typecheck, build, test, in that order. |
-| `pnpm validate:templates` | Validates `../templates` with Navigator's notation rules. |
-| `pnpm render:documents` | Re-render each catalog notation to `portal/dist/documents/`. Runs as `postbuild`. |
-| `pnpm render:pleadings` | Re-compiles Typst pleadings to `portal/dist/documents/`. Runs as `postbuild`. |
-
-Navigator builds this repository the same way. `navigator dev sample-project` clones it into a temporary directory, runs
-`pnpm install --frozen-lockfile` and `pnpm build`, and stages the resulting `dist/` under `.devx/sample-project/dist`;
-the next `web` boot publishes every file in it to the applications bucket, entry document last.
-
-## What it is made of
-
-```text
-portal/index.html           the Vite template — no inline script, ever
-portal/src/main.tsx                the entry: the stylesheet, imported once, and the mount
-portal/src/index.css               Tailwind, plus the theme every component reads, aliased from navigator-ux
-portal/src/App.tsx                 the shell, the fragment router, and the overview
-portal/src/IntroductionPage.tsx    Count II — eight tabs
-portal/src/DiscoveryPage.tsx       the interrogatories and the responses, split by who signed them
-portal/src/ResponsesPage.tsx       the set served on us, and the drafts waiting to be sworn
-portal/src/TrialPrepPage.tsx       the flashcard deck, and the simulated cross-examination
-portal/src/MotionPage.tsx          the motion: the limitations arithmetic, and what it does not ask for
-portal/src/CaseLibraryPage.tsx     real citations that are not Count II authorities
-portal/src/RelationshipGraph.tsx   the force-directed party/evidence web
-portal/src/PdfViewer.tsx           the document viewer: canvas, text layer, find bar
-portal/src/pdf.ts                  the pdf.js seam — worker wiring, opening, text extraction
-portal/src/art.tsx                 original inline SVG illustrations
-portal/src/inline.tsx              two marks of inline Markdown, for prose held as data
-portal/src/components/ui/*         shadcn-style components, owned here
-portal/src/lib/utils.ts            `cn()` — clsx plus tailwind-merge
-portal/src/matter.ts               the fixture data for the trespass count
-portal/src/soulContract.ts         the fixture data for Count II, including the graph
-portal/src/people.ts               who may read the matter, and who the matter is about
-portal/src/glossary.ts             Navigator's vocabulary, scoped to this bundle
-portal/src/research.ts             the authorities — real law, verified before it was written down
-portal/src/caseLibrary.ts          real citations outside Count II's scope — not fixture, not authority
-portal/src/discovery.ts            the interrogatory exchange, and the rules it is measured against
-portal/src/responses.ts            the set served on us, the drafts under it, and the derived deadline
-portal/src/trialPrep.ts            the prep cards, the ground rules, and the mock examination
-portal/src/documents.ts            the rendered PDFs and the catalog codes behind them
-portal/src/motion.ts               the motion, and the limitations arithmetic it derives rather than states
-portal/src/mount.ts                links derived from the base rather than written out
-templates/*.md                     this matter's own notation blueprints, flat and project-coded
-portal/pleadings/pleading-paper.typ the 28-line grid, the rules, and the caption box
-portal/pleadings/*.typ             Typst pleadings; the source of the sixth PDF
-portal/scripts/render-documents.sh `navigator template render`, once per catalog template
-portal/scripts/render-pleadings.sh `typst compile`, once per pleading
-portal/scripts/toolchain.sh        fetches the pinned Navigator CLI and Typst when they are absent
-```
-
-### Styling
-
-Semantic CSS variables in `portal/src/index.css` name roles, not colors. The component source names no hue.
-
-The teal accent is defined through a navigator-ux token. It keeps the documents tab coherent.
-
-Dark mode comes with the tokens. navigator-ux redefines its own under `prefers-color-scheme: dark`, so an alias resolves
-to the dark value inside that query and this repository carries no second palette. There is no theme state to hold and
-no flash of the wrong palette — and no class hook: Tailwind's `dark:` variant is pointed at the same media query,
-because the `.dark` class it defaults to is something nothing here sets.
-
-The components live here rather than arriving from a package, which is what shadcn is: you own the source, so a
-component that needs to behave differently gets edited instead of wrapped.
-
-The graph is the one place that reads variables directly through `var()` in SVG presentation attributes. Utility classes
-cannot reach `fill` and `stroke` on arbitrary SVG children, and hardcoding hex there would make it the only thing in the
-app that ignores the theme.
 
 ### Documents
 
