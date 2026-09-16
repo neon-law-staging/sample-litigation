@@ -145,17 +145,21 @@ export const MOTION = {
 /** Days until the motion is heard, as of `MOTION.asOf`. */
 export const DAYS_TO_HEARING: number = daysFromAsOf(MOTION.hearing.iso)
 
-/** The rendered pleading, and the Typst source behind it. */
+/** The filed pleading, and the document pointer that addresses it. */
 export const MOTION_DOCUMENT = {
   id: 'motion-msj',
   title: 'Motion for Partial Summary Judgment',
   kind: 'Motion',
   /** Path under the mount, without a leading slash — joined through `portalPath`. */
-  path: 'documents/motion-for-summary-judgment.pdf',
-  /** The Typst source, and the pleading-paper module it imports. */
-  source: 'pleadings/motion-summary-judgment.typ',
-  furniture: 'pleadings/pleading-paper.typ',
-  script: 'pnpm render:pleadings',
+  path: 'documents/pleadings/motion-for-summary-judgment.pdf',
+  /**
+   * The committed pointer. Its own path below `documents/` is the object key, so a
+   * folder in the key is a folder on disk and there is no key field to keep in step.
+   */
+  pointer: 'documents/pleadings/motion-for-summary-judgment.pdf.yml',
+  /** The asset Navigator minted on upload. The pointer's `sha256` verifies a fetch of it. */
+  assetId: '01a0ab85-2c7a-7184-9e1f-cbfdbf9d7ac6',
+  script: 'navigator site pull',
   pages: 7,
   /** Numbered lines per page — the thing that makes it pleading paper. */
   ruledLines: 28,

@@ -196,14 +196,14 @@ describe('the pleading itself', () => {
     expect(link).toHaveAttribute('href', `${MOUNT}${MOTION_DOCUMENT.path}`)
   })
 
-  it('names the Typst source and the command that regenerates it', () => {
+  it('names the pointer, the asset it addresses, and the command that fetches it', () => {
     // The provenance is the point, the same way the documents tab names the
-    // notation template behind each PDF. A committed artefact whose source is
-    // not stated beside it is an artefact nobody will re-render.
+    // notation template behind each PDF. A document whose pointer is not stated
+    // beside it is a document nobody can fetch again.
     render(<App />)
 
-    expect(screen.getByText(MOTION_DOCUMENT.source)).toBeInTheDocument()
-    expect(screen.getByText(MOTION_DOCUMENT.furniture)).toBeInTheDocument()
+    expect(screen.getByText(MOTION_DOCUMENT.pointer)).toBeInTheDocument()
+    expect(screen.getByText(MOTION_DOCUMENT.assetId)).toBeInTheDocument()
     expect(screen.getByText(MOTION_DOCUMENT.script)).toBeInTheDocument()
   })
 })
