@@ -232,6 +232,7 @@ describe('the count on the overview', () => {
     const nav = screen.getByRole('navigation', { name: 'Portal sections' })
     expect(within(nav).queryByText(/Your matters/i)).toBeNull()
     expect(within(nav).getAllByRole('link').map((link) => link.textContent)).toEqual([
+      'Timeline',
       'Overview',
       'Count II',
       'Discovery',

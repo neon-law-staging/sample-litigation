@@ -1,14 +1,6 @@
 # Working in sample-litigation
 
-One Project's repository, and source only: notation blueprints in `templates/`, and the React + Vite client portal in
-`portal/`, discovered from its direct `package.json`. Nothing else belongs here.
-
-A filename stem is the Project code with hyphens as `_`, then `__name`, and the file's `code:` matches it. Navigator
-imports each template and records the commit SHA as provenance.
-
-`README.md` is the orientation: what mounts where, why the base path is load-bearing, what the ready-hook contract is,
-and how the documents are rendered. Read it before changing anything structural, and update it when an answer it gives
-stops being true.
+This is a `navigator` project, use the `navigator` CLI to work here.
 
 ## One version, pinned in three places
 

@@ -14,4 +14,4 @@
  * kicker. Two copies of the string in two files would eventually become two
  * different strings.
  */
-export const READY_KICKER = <span id="sample-litigation-portal-ready">Client portal · live</span>
+export const READY_KICKER = <span id="sample-litigation-portal-ready">Client portal</span>
