@@ -36,9 +36,10 @@ defaults to `internal`, so a document the portal is meant to show has to say `cl
 checks them against the live asset record over GitHub Actions OIDC. CI needs no bucket credential for this, which is
 also why the check is not a second backend.
 
-One thing is broken today: `navigator site sync` refuses this repository's manifest, wanting `project:` as a string
-where `navigator.yaml` carries a map. `navigator project gate` accepts the map. That is a CLI defect, so it belongs in a
-Linear issue on the Lawyers team rather than in a workaround here.
+`navigator site sync` used to refuse this repository's manifest, wanting `project:` as a string where `navigator.yaml`
+carries a map. That is fixed as of 26.9.17, and `sync` is the verb that re-files a document: stage the bytes at the
+pointer's own path below `documents/`, `sync --dry-run` to see the plan, then `sync`. It uploads and rewrites the
+pointer for you, and `navigator site document log <pointer>` confirms the revision is operative.
 
 ## Before calling work done
 
