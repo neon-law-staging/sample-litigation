@@ -160,7 +160,7 @@ export const GLOSSARY: GlossaryTerm[] = [
     anchor: 'template',
     definition:
       'A static blueprint for one legal document, in four parts: metadata, a questionnaire, a workflow, and the prose body carrying `{{placeholder}}` slots. It asks nothing on its own — until a respondent is bound to it, it is inert, useful for linting and preview and nothing else.',
-    here: 'Five of them, and none is in this repository. They are jurisdiction-wide Neon Law notations in Navigator\u2019s shared catalog, and this Project references each by its `code` rather than carrying a copy \u2014 a copy would shadow the shared code and make global reference data matter-scoped. Each is the source of exactly one PDF under `dist/documents/`, rendered during the build. `pnpm validate:templates` holds this Project\u2019s own `templates/` to the same rule set the renderer does.',
+    here: 'Five of them, and none is in this repository. They are jurisdiction-wide Neon Law notations in Navigator\u2019s shared catalog, and this Project references each by its `code` rather than carrying a copy \u2014 a copy would shadow the shared code and make global reference data matter-scoped. Each is the source of exactly one PDF under `dist/documents/`, rendered during the build. `navigator project gate` holds this Project\u2019s own `templates/` to the same rule set the renderer does.',
     see: ['notation', 'questionnaire', 'output'],
   },
   {
@@ -221,7 +221,7 @@ export const GLOSSARY: GlossaryTerm[] = [
     anchor: 'rule',
     definition:
       'One machine-checkable constraint on a Markdown notation, with a stable identifier. Three families: `M` for Markdown hygiene, `N` for notation-template shape, and `S101` for the 120-character line limit. The validator and the renderer read the same set, so a template that renders is a template that passed.',
-    here: '`pnpm validate:templates` runs them over this Project\u2019s `templates/`, and `navigator validate .` runs the whole set over the whole tree in CI \u2014 the gate installs the pinned CLI itself. Run it locally whenever a template changes rather than waiting for the branch to go red.',
+    here: '`pnpm validate` runs them over this Project\u2019s `templates/`, and `navigator project gate` runs the whole set over the whole tree in CI \u2014 the gate installs the pinned CLI itself. Run it locally whenever a template changes rather than waiting for the branch to go red.',
     see: ['template', 'question-type'],
   },
   {

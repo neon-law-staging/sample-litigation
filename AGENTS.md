@@ -32,19 +32,19 @@ The object key is the pointer's own path below `documents/`, so a folder in the 
 carries `version`, `asset_id`, `created_at`, `sha256`, and `size_bytes`. `--kind` is a closed list, and `--visibility`
 defaults to `internal`, so a document the portal is meant to show has to say `client`.
 
-`navigator validate` and `navigator site document verify` both check pointers offline, and `verify --ci --host` checks
-them against the live asset record over GitHub Actions OIDC. CI needs no bucket credential for this, which is also why
-the check is not a second backend.
+`navigator project gate` and `navigator site document verify` both check pointers offline, and `verify --ci --host`
+checks them against the live asset record over GitHub Actions OIDC. CI needs no bucket credential for this, which is
+also why the check is not a second backend.
 
 One thing is broken today: `navigator site sync` refuses this repository's manifest, wanting `project:` as a string
-where `navigator.yaml` carries a map. `navigator validate` and `navigator site projects gate` both accept the map. That
-is a CLI defect, so it belongs in a Linear issue on the Lawyers team rather than in a workaround here.
+where `navigator.yaml` carries a map. `navigator project gate` accepts the map. That is a CLI defect, so it belongs in a
+Linear issue on the Lawyers team rather than in a workaround here.
 
 ## Before calling work done
 
 ```bash
 pnpm --dir portal check   # lint, typecheck, build, tests, in that order
-navigator validate        # Markdown, YAML, the manifest, and built origin references, over the whole tree
+navigator project gate    # Markdown, YAML, the manifest, and built origin references, over the whole tree
 ```
 
 The build is part of `check` because several tests assert against what `pnpm build` actually emitted rather than against
@@ -58,11 +58,11 @@ brew install neon-law-source-code/navigator/navigator
 ```
 
 An unqualified `brew install navigator` resolves to a Homebrew cask for a trackpad utility of the same name, which
-installs cleanly and then has no `validate` subcommand. CI uses no Homebrew; it installs the pinned release the
-workflows call.
+installs cleanly and then has no `project` subcommand. CI uses no Homebrew; it installs the pinned release the workflows
+call.
 
-Running `navigator site projects gate` walks this directory the way CI's structural pass does: templates, applications,
-and the manifest. It does not lint, typecheck, build, or test the portal, which is what the `check` script is for.
+Running `navigator project gate` walks this repository the way CI's structural pass does: templates, applications, and
+the manifest. It does not lint, typecheck, build, or test the portal, which is what the `check` script is for.
 
 ## Notation lint
 
@@ -75,14 +75,14 @@ a file whose frontmatter makes it a notation — a `code:`, a `questionnaire:`, 
 notation rules (`N*`). A finding prints as `path:line RULE: message`, and an error exits non-zero where a warning is
 only reported.
 
-`navigator validate --fix` applies in place the fixes that are safe by construction — whitespace, ATX heading spacing,
-blockquote spacing — and then re-validates. The rest are diagnostic only: the `N*` rules, duplicate headings (M024),
-trailing heading punctuation (M026). A notation state machine is not something a formatter should rewrite.
+`navigator project gate` applies in place the fixes that are safe by construction — whitespace, ATX heading spacing,
+blockquote spacing — and then re-checks; `--ci`, which is what CI runs, refuses to write and fails instead. The rest are
+diagnostic only: the `N*` rules, duplicate headings (M024), trailing heading punctuation (M026). A notation state
+machine is not something a formatter should rewrite.
 
-The `validate:templates` script narrows the same check to `templates/`. It reports one N112 warning per template: each
-`lawyer_review` step reaches automation that is not built yet. That is the rule doing its job rather than noise to
-silence — a transition naming something nothing implements is exactly what a reader of this repository would otherwise
-copy.
+The same check covers `templates/` as part of the tree. It reports one N112 warning per template: each `lawyer_review`
+step reaches automation that is not built yet. That is the rule doing its job rather than noise to silence — a
+transition naming something nothing implements is exactly what a reader of this repository would otherwise copy.
 
 ## Writing prose that passes
 
@@ -123,7 +123,7 @@ rewrapping a paragraph to 80 or 100 columns. Four things the rule messages do no
 
 ## Reaching outside this tree
 
-`navigator site projects repository sync-skills` writes Navigator's canonical agent skills into `.claude/skills/`. The
+`navigator project repository sync-skills` writes Navigator's canonical agent skills into `.claude/skills/`. The
 `stay-in-repo` skill there is the scope rule to read before reaching outside this tree. One thing it does not cover,
 because it is specific to this bundle: another checkout of Navigator itself. The route this bundle mounts under belongs
 to Navigator, and `README.md` records what the contract is. Read the README rather than a copy of Navigator's source

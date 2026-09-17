@@ -10,7 +10,7 @@ import { ACCRUAL_CANDIDATES, COURT, LIMITATIONS_YEARS, MOTION, NARROWEST_MARGIN,
  * This is not one of the shared catalog notations the documents tab lists, and
  * never will be — the card beside it on the page, and `README.md` before that,
  * explain why pleading paper has no render profile here. It exists only as data
- * for `MotionPage`, is never walked by `navigator validate`, and never reaches
+ * for `MotionPage`, is never walked by `navigator project gate`, and never reaches
  * `navigator template render`. The frontmatter and body below borrow the shape
  * of the catalog’s `rescission_notice__nevada` — `questionnaire` chained field to
  * field,
