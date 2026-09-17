@@ -1005,7 +1005,7 @@ function DocumentsTab() {
                 </p>
                 <p>
                   The renderer validates against the same notation rule set as{' '}
-                  <code>navigator validate</code> and refuses any template with a violation, so a
+                  <code>navigator project gate</code> and refuses any template with a violation, so a
                   document that renders is a document that passed. Markdown becomes Typst and
                   compiles in pure Rust — no shell-out, no headless browser.
                 </p>

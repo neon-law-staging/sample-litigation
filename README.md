@@ -50,8 +50,8 @@ The motion comes from Typst.
 *The motion is typeset, not templated* below is why it is not a notation template like the others.
 
 The notation ones come from Markdown carrying a questionnaire and a workflow in its frontmatter. The renderer validates
-against the same rule set as `navigator validate` and refuses a template with any violation, so a PDF that exists is a
-template that passed.
+against the same rule set as `navigator project gate` and refuses a template with any violation, so a PDF that exists is
+a template that passed.
 
 There are five: the summons that opened the trespass count already before the Eighth Judicial District Court, the
 engagement letter that opens the representation, the notice of rescission served on the defendant, the affidavit of the
@@ -85,11 +85,11 @@ caller pinned to an immutable release tag cannot reorder that job. So the build 
 the exact version `navigator.yaml` pins, and skips the download entirely when they are already on `PATH`. Nothing is
 written inside the checkout.
 
-`pnpm validate:templates` is the check that keeps this matter's own blueprints renderable; `navigator validate .` runs
-the whole rule set over the whole tree, and the gate's `notation` job runs it in CI on every pull request. The notation
-rule set is versioned in Navigator rather than here, which means a template can stop validating without anything in this
-repository changing: that is exactly what happened to the `staff_review` workflow state these templates used to carry,
-before `N106` began requiring the `lawyer_review` gate that every one of them now names.
+`pnpm validate` is the check that keeps this matter's own blueprints renderable: `navigator project gate` runs the whole
+rule set over the whole tree, templates included, and the gate's `verify` job runs it in CI on every pull request. The
+notation rule set is versioned in Navigator rather than here, which means a template can stop validating without
+anything in this repository changing: that is exactly what happened to the `staff_review` workflow state these templates
+used to carry, before `N106` began requiring the `lawyer_review` gate that every one of them now names.
 
 ### The viewer is ours
 
@@ -259,7 +259,7 @@ missing. Both outputs land in `dist/documents/` during `postbuild`, and `portal/
 motion reaches `dist/` separately from the five notation PDFs. `vite build` does not know Typst exists, so it would not
 notice the file going missing.
 
-`pnpm validate:templates` runs `navigator validate ../templates` over this matter's own blueprints. That is why
+`navigator project gate` covers this matter's own blueprints under `templates/` as part of the whole tree. That is why
 `portal/pleadings/` is a directory of the application rather than `templates/typst/`. A `.typ` file does not belong in
 notation validation.
 
