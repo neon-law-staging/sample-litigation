@@ -1,8 +1,8 @@
-kind: pleading
+kind: filing
 visibility: client
 current_version:
   version: 1
-  asset_id: 01a0ab85-2c7a-7184-9e1f-cbfdbf9d7ac6
-  created_at: 2026-09-16T18:40:26Z
-  sha256: 8c53cf4bf380502553f2b98bd9fb9d9e14bc909c4831df528dced304abb8cc98
-  size_bytes: 63197
+  asset_id: 01a0af89-9c5c-773e-b858-1a66aaadc6bb
+  created_at: 2026-09-17T13:23:46Z
+  sha256: 930987b4787747afd3f26f7aef16bbc424bbdcb391048ee9e1b1ffd13c585311
+  size_bytes: 63187
