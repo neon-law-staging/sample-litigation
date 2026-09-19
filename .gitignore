@@ -2,10 +2,10 @@ node_modules/
 dist/
 coverage/
 
-# Per-machine Claude Code settings. `.claude/launch.json` is committed — it is
+# Per-machine agent settings. `.agents/launch.json` is committed — it is
 # how the dev server is started and belongs to the repository.
-.claude/settings.local.json
-.claude/worktrees/
+.agents/settings.local.json
+.agents/worktrees/
 *.tsbuildinfo
 .DS_Store
 .env

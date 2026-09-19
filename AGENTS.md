@@ -124,7 +124,7 @@ rewrapping a paragraph to 80 or 100 columns. Four things the rule messages do no
 
 ## Reaching outside this tree
 
-`navigator project repository sync-skills` writes Navigator's canonical agent skills into `.claude/skills/`. The
+`navigator project repository sync-skills` writes Navigator's canonical agent skills into `.agents/skills/`. The
 `stay-in-repo` skill there is the scope rule to read before reaching outside this tree. One thing it does not cover,
 because it is specific to this bundle: another checkout of Navigator itself. The route this bundle mounts under belongs
 to Navigator, and `README.md` records what the contract is. Read the README rather than a copy of Navigator's source
