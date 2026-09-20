@@ -113,7 +113,7 @@ catalog_template() {
     if [ ! -f "${dir}/${name}.md" ]; then
         mkdir -p "${dir}"
         fetch \
-          "https://github.com/neon-law-source-code/navigator/raw/${version}/templates/notations/neon_law/shared/${name}.md" \
+          "https://github.com/neon-law-source-code/navigator/raw/${version}/templates/notations/neon_law/${name}.md" \
           "${dir}/${name}.md"
     fi
 
