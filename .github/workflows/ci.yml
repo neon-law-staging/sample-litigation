@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   ci:
-    uses: neon-law-source-code/navigator/.github/workflows/project-gate.yml@26.9.19
+    uses: neon-law-source-code/navigator/.github/workflows/project-gate.yml@26.9.20
     with:
       project: "sample-litigation"
       host: "staging.neonlaw.com"
