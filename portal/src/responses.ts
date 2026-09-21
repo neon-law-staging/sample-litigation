@@ -1,5 +1,5 @@
 // Copyright (C) 2026 Shook Law PLLC.
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: Apache-2.0
 
 import { PROCEEDING, RULES, type Rule, type Topic } from './discovery'
 import type { StatusCell } from './types'

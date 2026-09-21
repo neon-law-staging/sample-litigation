@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Copyright (C) 2026 Shook Law PLLC.
-# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-License-Identifier: Apache-2.0
 #
 # Put the renderer the portal's documents need on `PATH`: the Navigator CLI, at
 # the exact version `navigator.yaml` pins.

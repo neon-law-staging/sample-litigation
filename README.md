@@ -331,19 +331,22 @@ that cannot 404.
 
 ## License
 
-Copyright (C) 2026 Neon Law Foundation. Licensed under the [GNU Affero General Public License v3.0 or later](./LICENSE).
-[`LICENSE`](./LICENSE) is the license text verbatim as the Free Software Foundation publishes it, and it is the only
-license file in this repository — there is no summary of it to drift out of step. Every source file carries the matching
-SPDX notice. [`portal/src/test/license.test.ts`](./portal/src/test/license.test.ts) asserts the text's exact length, the
-notice on every source file, and the notice in each file the build publishes.
+Apache-2.0 over the whole tree — [`LICENSE`](LICENSE) is the Apache Software Foundation's text verbatim and
+unsummarised, and the only licence file here. You may use, modify, redistribute and deploy this application, including
+commercially, with no obligation to publish your changes. Keep the notices: retain the copyright line and the licence,
+and state any file you changed.
 
-Section 13 is the clause that distinguishes the AGPL from the plain GPL, and it is not incidental for a browser portal
-that Navigator serves over a network: deploy a **modified** version for other people to use and you owe those users the
-corresponding source of what you deployed, not the source of this repository. Running an unmodified copy, forking it
-privately, and building it locally trigger nothing.
+The licence grants copyright and, under section 3, patent — it does not grant trademark. NEON LAW is a registered mark,
+U.S. Reg. No. 6,325,650, owned by Shook Law PLLC, which operates Navigator and trades as Neon Law. A fork carries the
+code without the marks.
 
-That grant covers the work the Foundation owns. It does not relicense the third-party libraries this application draws
-on, which keep their own terms and their own copyright holders:
+Contributions are closed — a capacity decision rather than a licensing one. Write to
+[contact@neonlaw.com](mailto:contact@neonlaw.com) with a bug, a fork you are running, or a question about the licence,
+and report security findings to [support@neonlaw.com](mailto:support@neonlaw.com). Anything submitted for inclusion is
+inbound = outbound, licensed Apache-2.0 on the same terms; you keep the copyright in what you write.
+
+The grant covers the work in this repository. It does not relicense the third-party libraries this application draws on,
+which keep their own terms and their own copyright holders:
 
 | License | Library |
 | --- | --- |
@@ -353,12 +356,13 @@ on, which keep their own terms and their own copyright holders:
 | SIL OFL 1.1 | Source Serif 4 — the two woff2 files navigator-ux vendors, which this build emits under the mount |
 
 `tailwindcss` is a build-time dependency rather than a shipped library: it is compiled into the emitted stylesheet.
+navigator-ux was AGPL-3.0-only through v0.8.0 and is Apache-2.0 from v26.9.3 on; its `NOTICE` records that each earlier
+version stays under the terms it shipped with, so the pin in `portal/package.json` is also what fixes which license
+applies.
 
-A copyleft license here and permissive licenses underneath are not in conflict: copyleft flows downstream to what
-includes this work, never upstream to what this work includes. navigator-ux was AGPL-3.0-only through v0.8.0 and is
-Apache-2.0 from v26.9.3 on; its `NOTICE` records that each earlier version stays under the terms it shipped with, so the
-pin in `portal/package.json` is also what fixes which license applies.
+[`portal/src/test/license.test.ts`](./portal/src/test/license.test.ts) asserts the license text's exact length, the
+notice on every source file, and the notice in each file the build publishes.
 
 ```text
-SPDX-License-Identifier: AGPL-3.0-or-later
+SPDX-License-Identifier: Apache-2.0
 ```
