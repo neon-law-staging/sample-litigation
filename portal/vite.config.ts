@@ -1,5 +1,5 @@
 // Copyright (C) 2026 Shook Law PLLC.
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: Apache-2.0
 
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
@@ -37,7 +37,7 @@ const PROJECT_ROOT = fileURLToPath(new URL('..', import.meta.url))
 const LICENSE_BANNER = `/*!
  * Cruller v. Prine — Client Portal.
  * Copyright (C) 2026 Shook Law PLLC.
- * SPDX-License-Identifier: AGPL-3.0-or-later
+ * SPDX-License-Identifier: Apache-2.0
  *
  * Source: https://github.com/neon-law-staging/sample-litigation
  */`

@@ -1,5 +1,5 @@
 // Copyright (C) 2026 Shook Law PLLC.
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: Apache-2.0
 
 import { describe, expect, it } from 'vitest'
 
@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest'
  * The licensing invariants, asserted against the files themselves.
  *
  * Three things drift independently: the license text, the per-file notices, and
- * what the build actually publishes. A repository that declares AGPL in
+ * what the build actually publishes. A repository that declares Apache-2.0 in
  * `package.json` while carrying a reflowed license text, a new source file with
  * no notice, or a bundle whose minifier quietly ate the banner is not licensed
  * the way it says it is — and nothing else in this suite would notice.
@@ -18,17 +18,18 @@ import { describe, expect, it } from 'vitest'
  * scope.
  */
 
-const SPDX = 'SPDX-License-Identifier: AGPL-3.0-or-later'
+const SPDX = 'SPDX-License-Identifier: Apache-2.0'
 const COPYRIGHT = 'Copyright (C) 2026 Shook Law PLLC.'
 const BUILD_FIRST = 'no dist/ — run `pnpm build` before `pnpm test`, or run `pnpm check`'
 
 /*
- * The AGPL-3.0 text as the Free Software Foundation publishes it at
- * <https://www.gnu.org/licenses/agpl-3.0.txt>: 661 newlines, 34523 bytes. The
- * bounds pin the file without hashing it, so this test needs no crypto import.
+ * The Apache License 2.0 text as the Apache Software Foundation publishes it at
+ * <https://www.apache.org/licenses/LICENSE-2.0.txt>: 201 newlines, 11344 bytes.
+ * The bounds pin the file without hashing it, so this test needs no crypto
+ * import.
  */
-const LICENSE_NEWLINES = 661
-const LICENSE_BYTES = 34523
+const LICENSE_NEWLINES = 201
+const LICENSE_BYTES = 11344
 
 // Globbed with a trailing `*` because Vite's glob plugin rejects a pattern with
 // no extension. The pattern is deliberately wider than the one file it should
@@ -100,33 +101,32 @@ function without(needle: string): string[] {
 }
 
 describe('the license', () => {
-  it('is the AGPL-3.0 text verbatim', () => {
+  it('is the Apache-2.0 text verbatim', () => {
     // Byte for byte, because a summary, a reflow, or a helpfully-updated URL is
     // no longer the license the SPDX identifier names.
     const text = licenseText()
     const lines = text.split('\n')
 
-    expect(lines[0]).toBe('                    GNU AFFERO GENERAL PUBLIC LICENSE')
-    expect(lines[1]).toBe('                       Version 3, 19 November 2007')
-    expect(text).toContain(
-      '13. Remote Network Interaction; Use with the GNU General Public License.',
-    )
-    expect(text.trimEnd().endsWith('<https://www.gnu.org/licenses/>.')).toBe(true)
+    expect(lines[0]).toBe('                                 Apache License')
+    expect(lines[1]).toBe('                           Version 2.0, January 2004')
+    expect(text).toContain('TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION')
+    expect(text.trimEnd().endsWith('limitations under the License.')).toBe(true)
     expect(lines.length - 1).toBe(LICENSE_NEWLINES)
     expect(text.length).toBe(LICENSE_BYTES)
   })
 
   it('is the only license file', () => {
-    // One file, and it is the FSF's text. A repository that also carries a
+    // One file, and it is the ASF's text. A repository that also carries a
     // guide, a summary, or a NOTICE has two things that can disagree about the
-    // terms, and the reader has no way to know which one governs. The terms are
-    // `LICENSE`; everything explaining them lives in the README, which nobody
-    // mistakes for a grant.
+    // terms, and the reader has no way to know which one governs. Apache-2.0
+    // section 4(d) only binds a work that ships a NOTICE, and this one does not
+    // — the terms are `LICENSE`, and everything explaining them lives in the
+    // README, which nobody mistakes for a grant.
     expect(Object.keys(licenses).map((path) => path.split('/').pop())).toEqual(['LICENSE'])
   })
 
   it('is the license `package.json` declares', () => {
-    expect(only(manifests, 'package.json is missing')).toContain('"license": "AGPL-3.0-or-later"')
+    expect(only(manifests, 'package.json is missing')).toContain('"license": "Apache-2.0"')
   })
 })
 
@@ -135,7 +135,7 @@ describe('the license notices', () => {
     expect(Object.keys(sources).length).toBeGreaterThan(0)
 
     const bare = without(SPDX)
-    expect(bare, `no AGPL notice in: ${bare.join(', ')}`).toEqual([])
+    expect(bare, `no Apache-2.0 notice in: ${bare.join(', ')}`).toEqual([])
   })
 
   it('name the copyright holder alongside the identifier', () => {
@@ -150,9 +150,9 @@ describe('the license notices', () => {
       'src/main.tsx is missing',
     )
 
-    expect(entry).toContain('This program is free software')
-    expect(entry).toContain('WITHOUT\n * ANY WARRANTY')
-    expect(entry).toContain('https://www.gnu.org/licenses/')
+    expect(entry).toContain('Licensed under the Apache License, Version 2.0')
+    expect(entry).toContain('WITHOUT\n * WARRANTIES OR CONDITIONS OF ANY KIND')
+    expect(entry).toContain('http://www.apache.org/licenses/LICENSE-2.0')
     expect(entry).toContain(SPDX)
   })
 
@@ -173,7 +173,7 @@ describe('the published bundle', () => {
     // code generation, because the minifier drops comments.
     expect(Object.keys(builtScripts).length, BUILD_FIRST).toBeGreaterThan(0)
     for (const [path, code] of Object.entries(builtScripts)) {
-      expect(code, `no AGPL notice in ${path}`).toContain(SPDX)
+      expect(code, `no Apache-2.0 notice in ${path}`).toContain(SPDX)
     }
   })
 
@@ -182,7 +182,7 @@ describe('the published bundle', () => {
     // keeps. Downgrade it to a plain comment and this fails.
     expect(Object.keys(builtStyles).length, BUILD_FIRST).toBeGreaterThan(0)
     for (const [path, css] of Object.entries(builtStyles)) {
-      expect(css, `no AGPL notice in ${path}`).toContain(SPDX)
+      expect(css, `no Apache-2.0 notice in ${path}`).toContain(SPDX)
     }
   })
 })
