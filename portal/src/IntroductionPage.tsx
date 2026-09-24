@@ -889,7 +889,7 @@ function ResearchTab() {
 /**
  * The documents tab.
  *
- * Every PDF here is produced by `navigator notations render` from a notation
+ * Every PDF here is produced by `navigator notation pdf` from a notation
  * template in Navigator's shared catalog, which is why each card names the code
  * it was rendered from: that code is the provenance, and it is what Navigator
  * resolves when the matter references the template. `pnpm render:documents`

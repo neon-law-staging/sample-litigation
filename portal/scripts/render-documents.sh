@@ -27,7 +27,7 @@
 # Because `vite build` empties `dist/`, this script runs after it rather than
 # before.
 #
-# `navigator notations render` validates against the same notation rule set as
+# `navigator notation pdf` validates against the same notation rule set as
 # `navigator validate` and refuses a template carrying any violation, so a PDF
 # that appears is a template that passed.
 set -euo pipefail
@@ -58,12 +58,12 @@ trespass to land, and rescission of the alleged instrument conveying the \
 client's soul — and in the Eighth Judicial District Court action already on \
 file to the extent any claim remains before that court."
 
-navigator notations render "$(catalog_template summons_nevada)" \
+navigator notation pdf "$(catalog_template summons_nevada)" \
   --out dist/documents/summons-wendell-prine.pdf \
   --answer person__client="$CLIENT" \
   --answer custom_datetime__issuance_date="$ISSUANCE"
 
-navigator notations render "$(catalog_template rescission_notice_nevada)" \
+navigator notation pdf "$(catalog_template rescission_notice_nevada)" \
   --out dist/documents/notice-of-rescission.pdf \
   --answer person__client="$CLIENT" \
   --answer custom_datetime__offer_date="$OFFER" \
@@ -71,7 +71,7 @@ navigator notations render "$(catalog_template rescission_notice_nevada)" \
   --answer custom_datetime__discovery_date="$DISCOVERY" \
   --answer custom_datetime__notice_date="$NOTICE"
 
-navigator notations render "$(catalog_template engagement_letter_nevada)" \
+navigator notation pdf "$(catalog_template engagement_letter_nevada)" \
   --out dist/documents/engagement-letter-dermot-cruller.pdf \
   --answer person__client="$CLIENT" \
   --answer person__adverse_party="$ADVERSE" \
@@ -81,14 +81,14 @@ navigator notations render "$(catalog_template engagement_letter_nevada)" \
   --answer custom_single_choice__arbitration_forum="$FORUM" \
   --answer custom_single_choice__governing_law="Nevada"
 
-navigator notations render "$(catalog_template witness_affidavit_nevada)" \
+navigator notation pdf "$(catalog_template witness_affidavit_nevada)" \
   --out dist/documents/affidavit-odile-cruller.pdf \
   --answer person__client="$CLIENT" \
   --answer custom_datetime__offer_date="$OFFER" \
   --answer custom_datetime__completion_date="$COMPLETION" \
   --answer custom_datetime__discovery_date="$DISCOVERY"
 
-navigator notations render "$(catalog_template answer_to_counterclaim_nevada)" \
+navigator notation pdf "$(catalog_template answer_to_counterclaim_nevada)" \
   --out dist/documents/answer-to-counterclaim-dermot-cruller.pdf \
   --answer person__client="$CLIENT" \
   --answer custom_datetime__answer_date="$ANSWERED"

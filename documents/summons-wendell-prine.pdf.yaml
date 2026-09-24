@@ -1,0 +1,8 @@
+kind: filing
+visibility: client
+current_version:
+  version: 1
+  asset_id: 01a08269-b1a5-70f3-829f-82ae9870f4eb
+  created_at: 2026-09-08T19:05:59Z
+  sha256: a6f80f6bf1a1a60a05455ca958304828a4f144901b7d55c2d3e2a242e14de171
+  size_bytes: 21744
