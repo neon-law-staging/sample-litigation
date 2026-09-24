@@ -41,7 +41,7 @@ pnpm dev
 
 No PDF under `portal/dist/documents/` is hand-authored.
 
-Five come from `navigator notations render`.
+Five come from `navigator notation pdf`.
 
 Their notation templates are in Navigator's shared catalog, not here.
 

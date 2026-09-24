@@ -4,7 +4,7 @@
 /**
  * The documents in the matter.
  *
- * All five PDFs are real files produced by `navigator notations render`, and
+ * All five PDFs are real files produced by `navigator notation pdf`, and
  * `pnpm render:documents` regenerates them into `dist/documents/` — they are
  * build output rather than committed files. Nothing here is hand-authored PDF:
  * if the prose in a document is wrong, the template is wrong, and the fix is
