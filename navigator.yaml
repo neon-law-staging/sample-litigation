@@ -1,4 +1,4 @@
-version: 26.9.25-rc.1
+version: 26.9.25
 project:
   host: staging.neonlaw.com
   name: sample-litigation
