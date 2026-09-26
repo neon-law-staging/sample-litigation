@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   gate:
-    uses: neon-law-source-code/navigator/.github/workflows/project-gate.yml@26.9.26-rc.2
+    uses: neon-law-source-code/navigator/.github/workflows/project-gate.yml@26.9.26
   publish:
     needs: gate
-    uses: neon-law-source-code/navigator/.github/workflows/project-publish.yml@26.9.26-rc.2
+    uses: neon-law-source-code/navigator/.github/workflows/project-publish.yml@26.9.26
